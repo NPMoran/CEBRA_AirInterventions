@@ -1,0 +1,530 @@
+# Study: Border biosecurity interceptions for air passengers – assessing intervention methods and analytic tools
+#
+# Code authored by: Nicholas Moran, CEBRA, University of Melbourne
+#
+# Date: May 2024
+
+
+
+#Loading required packages:
+# - data processing
+library(tidyverse); library(data.table); library(lubridate); library(xtable)
+# - modelling
+library(lme4); library(lmerTest);  library(car); library(performance); library(emmeans)
+#library(brms)
+
+
+
+#### 1. Main analysis models (glmer) ####
+
+#Preparing data set - 
+Pass_BAS_dat_processed <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_dat_processed_danon.csv')
+
+# - Removing flights with extremely extremely high passenger counts (n=26)
+#nrow(subset(Pass_BAS_dat_processed, PassengerCount >= 500))
+Pass_BAS_dat_processed.mod <- subset(Pass_BAS_dat_processed, PassengerCount <= 500)
+
+# - Removing one entry with the bag search count missing and one over 1000. 
+Pass_BAS_dat_processed.mod <- subset(Pass_BAS_dat_processed.mod, BagSearchCount != 'NA')
+Pass_BAS_dat_processed.mod <- subset(Pass_BAS_dat_processed.mod, BagSearchCount <= 1000)
+
+# - Excluding Bridport, as low numbers caused issues estimating marginal means. 
+Pass_BAS_dat_processed.mod <- subset(Pass_BAS_dat_processed.mod, Location != "Airport_G")
+
+# - Sqrt-transforming and Z-scaling count variables.
+Pass_BAS_dat_processed.mod$sqrt.BagSearchCount <- sqrt(Pass_BAS_dat_processed.mod$BagSearchCount)
+Pass_BAS_dat_processed.mod$sqrt.PassengerCount <- sqrt(Pass_BAS_dat_processed.mod$PassengerCount)
+Pass_BAS_dat_processed.mod$sqrt.BagSearchCount.Z <- scale(Pass_BAS_dat_processed.mod$sqrt.BagSearchCount)
+Pass_BAS_dat_processed.mod$sqrt.PassengerCount.Z <- scale(Pass_BAS_dat_processed.mod$sqrt.PassengerCount)
+
+
+# - Final counts for summary data
+nrow(Pass_BAS_dat_processed) #59917
+sum(Pass_BAS_dat_processed$N_Total_FF) #43803 (corrected to 43697)
+sum(Pass_BAS_dat_processed$N_Total) #66675
+
+# - Final counts for modelling
+nrow(Pass_BAS_dat_processed.mod) #59864
+sum(Pass_BAS_dat_processed.mod$N_Total_FF) #43761 (corrected to 43655)
+sum(Pass_BAS_dat_processed.mod$N_Total) #66617
+
+
+
+#Model 1, glmer implementation
+Pass_BAS_full_DD_total_glm <- glmer(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+##Model 2, glmer implementation
+Pass_BAS_full_Declarin_glm <- glmer(N_Declarations ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod , control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+##Model 3, glmer implementation
+Pass_BAS_full_Detectin_glm <- glmer(N_Detections ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+##Model 4, glmer implementation
+Pass_BAS_full_DD_total_FF_glm <- glmer(N_Total_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+##Model 5, glmer implementation
+Pass_BAS_full_Declarin_FF_glm <- glmer(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+##Model 6, glmer implementation
+Pass_BAS_full_Detectin_FF_glm <- glmer(N_Detections_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+
+save(Pass_BAS_full_DD_total_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
+save(Pass_BAS_full_Declarin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
+save(Pass_BAS_full_Detectin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.RData")
+save(Pass_BAS_full_DD_total_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.RData")
+save(Pass_BAS_full_Declarin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.RData")
+save(Pass_BAS_full_Detectin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData")
+
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData")
+
+#summary(Pass_BAS_full_DD_total_glm)
+#summary(Pass_BAS_full_Declarin_glm)
+#summary(Pass_BAS_full_Detectin_glm)
+#summary(Pass_BAS_full_DD_total_FF_glm)
+#summary(Pass_BAS_full_Declarin_FF_glm)
+#summary(Pass_BAS_full_Detectin_FF_glm)
+
+
+
+Pass_BAS_full_DD_total_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_DD_total_glm))
+Pass_BAS_full_Declarin_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Declarin_glm))
+Pass_BAS_full_Detectin_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Detectin_glm))
+Pass_BAS_full_DD_total_glm_confint <- confint(Pass_BAS_full_DD_total_glm, method="Wald")[3:14,]
+Pass_BAS_full_Declarin_glm_confint <- confint(Pass_BAS_full_Declarin_glm, method="Wald")[3:14,]
+Pass_BAS_full_Detectin_glm_confint <- confint(Pass_BAS_full_Detectin_glm, method="Wald")[3:14,]
+Pass_BAS_full_DD_total_glm.fixef <- cbind(Pass_BAS_full_DD_total_glm.fixef,Pass_BAS_full_DD_total_glm_confint)
+Pass_BAS_full_Declarin_glm.fixef <- cbind(Pass_BAS_full_Declarin_glm.fixef,Pass_BAS_full_Declarin_glm_confint)
+Pass_BAS_full_Detectin_glm.fixef <- cbind(Pass_BAS_full_Detectin_glm.fixef,Pass_BAS_full_Detectin_glm_confint)
+colnames(Pass_BAS_full_DD_total_glm.fixef) <- c("Total", "Total_lci", "Total_uci")
+colnames(Pass_BAS_full_Declarin_glm.fixef) <- c("Decle", "Decle_lci", "Decle_uci")
+colnames(Pass_BAS_full_Detectin_glm.fixef) <- c("Detec", "Detec_lci", "Detec_uci")
+
+Pass_BAS_full_DD_total_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_DD_total_glm))
+Pass_BAS_full_Declarin_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_Declarin_glm))
+Pass_BAS_full_Detectin_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_Detectin_glm))
+
+#write.csv(Pass_BAS_full_DD_total_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.fixef.csv")
+#write.csv(Pass_BAS_full_Declarin_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.fixef.csv")
+#write.csv(Pass_BAS_full_Detectin_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.fixef.csv")
+#write.csv(Pass_BAS_full_DD_total_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.ranef.csv")
+#write.csv(Pass_BAS_full_Declarin_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.ranef.csv")
+#write.csv(Pass_BAS_full_Detectin_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.ranef.csv")
+
+Pass_BAS_full_DD_total_FF_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_DD_total_FF_glm))
+Pass_BAS_full_Declarin_FF_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Declarin_FF_glm))
+Pass_BAS_full_Detectin_FF_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Detectin_FF_glm))
+Pass_BAS_full_DD_total_FF_glm_confint <- confint(Pass_BAS_full_DD_total_FF_glm, method="Wald")[3:14,]
+Pass_BAS_full_Declarin_FF_glm_confint <- confint(Pass_BAS_full_Declarin_FF_glm, method="Wald")[3:14,]
+Pass_BAS_full_Detectin_FF_glm_confint <- confint(Pass_BAS_full_Detectin_FF_glm, method="Wald")[3:14,]
+Pass_BAS_full_DD_total_FF_glm.fixef <- cbind(Pass_BAS_full_DD_total_FF_glm.fixef,Pass_BAS_full_DD_total_FF_glm_confint)
+Pass_BAS_full_Declarin_FF_glm.fixef <- cbind(Pass_BAS_full_Declarin_FF_glm.fixef,Pass_BAS_full_Declarin_FF_glm_confint)
+Pass_BAS_full_Detectin_FF_glm.fixef <- cbind(Pass_BAS_full_Detectin_FF_glm.fixef,Pass_BAS_full_Detectin_FF_glm_confint)
+colnames(Pass_BAS_full_DD_total_FF_glm.fixef) <- c("Total", "Total_lci", "Total_uci")
+colnames(Pass_BAS_full_Declarin_FF_glm.fixef) <- c("Decle", "Decle_lci", "Decle_uci")
+colnames(Pass_BAS_full_Detectin_FF_glm.fixef) <- c("Detec", "Detec_lci", "Detec_uci")
+
+Pass_BAS_full_DD_total_FF_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_DD_total_FF_glm))
+Pass_BAS_full_Declarin_FF_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_Declarin_FF_glm))
+Pass_BAS_full_Detectin_FF_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_Detectin_FF_glm))
+
+#write.csv(Pass_BAS_full_DD_total_FF_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.fixef.csv")
+#write.csv(Pass_BAS_full_Declarin_FF_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.fixef.csv")
+#write.csv(Pass_BAS_full_Detectin_FF_glm.fixef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.fixef.csv")
+#write.csv(Pass_BAS_full_DD_total_FF_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.ranef.csv")
+#write.csv(Pass_BAS_full_Declarin_FF_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.ranef.csv")
+#write.csv(Pass_BAS_full_Detectin_FF_glm.ranef, "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.ranef.csv")
+
+
+
+
+
+
+#Model 1, glmer implementation
+Radslop_test<- glmer(N_Total ~ 1 + Location + Regime + (sqrt.PassengerCount.Z|FlightOrigin), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+
+
+
+
+
+#### 2A. Outputs: Location ####
+
+Means_Location<-setDT(Pass_BAS_dat_processed)[ , list(mean_location = mean(N_Total),
+                                                      mean_FF_location = mean(N_Total_FF)), 
+                                               by = .(Location)]
+Means_Location
+
+
+##BRM Detections
+
+Loca_ems1 <- emmeans(Pass_BAS_full_DD_total_glm, ~Location)
+Loca_ems2 <- emmeans(Pass_BAS_full_Declarin_glm, ~Location)
+Loca_ems3 <- emmeans(Pass_BAS_full_Detectin_glm, ~Location)
+
+Loca_pairs1 <- as.data.frame(summary(pairs(Loca_ems1), point.est = mean))
+Loca_pairs2 <- as.data.frame(summary(pairs(Loca_ems2), point.est = mean))
+Loca_pairs3 <- as.data.frame(summary(pairs(Loca_ems3), point.est = mean))
+
+Loca_ems1 <- as.data.frame(Loca_ems1) 
+Loca_ems2 <- as.data.frame(Loca_ems2) 
+Loca_ems3 <- as.data.frame(Loca_ems3) 
+
+Loca_ems1$Variable <- "N_Total" 
+Loca_ems2$Variable <- "N_Declarations" 
+Loca_ems3$Variable <- "N_Detections" 
+
+Loca_ems1$Position <- c(20:15)
+Loca_ems2$Position <- c(13:8)
+Loca_ems3$Position <- c(6:1)
+
+Loca_emsA <- rbind(Loca_ems1,Loca_ems2,Loca_ems3)
+Loca_emsA$Variable <- ordered(Loca_emsA$Variable, levels = c("N_Total", "N_Declarations", "N_Detections"))
+
+Loca_emsA$N_mean <- exp(Loca_emsA$emmean)
+Loca_emsA$N_lci <- exp(Loca_emsA$asymp.LCL)
+Loca_emsA$N_uci <- exp(Loca_emsA$asymp.UCL)
+
+#Loca_emsA$Location <- gsub(".*\\_", "", Loca_emsA$Location) 
+
+Loca_emsA$text <- paste(Loca_emsA$Location, round(exp(Loca_emsA$emmean), digits = 2), sep = ': ')
+Loca_emsA$text <- paste(Loca_emsA$text, round(exp(Loca_emsA$asymp.LCL), digits = 2), sep = ' [')
+Loca_emsA$text <- paste(Loca_emsA$text, round(exp(Loca_emsA$asymp.UCL), digits = 2), sep = ', ')
+Loca_emsA$text <- paste(Loca_emsA$text, '', sep = ']')
+Loca_emsA$text
+
+Fig_Air_Loca_A <- ggplot(Loca_emsA, aes(x = N_mean, y = Position)) +
+  scale_x_continuous(limits = c(-0.8, 2.2), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+  scale_y_continuous(limits = c(0, 21), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.85,0.175),
+        legend.title = element_blank(),
+        axis.text.y = element_blank(), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", linewidth = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, linewidth = 1)) +
+  geom_segment(aes(color = Variable), x = Loca_emsA$N_lci, y = Loca_emsA$Position, xend = Loca_emsA$N_uci, yend = Loca_emsA$Position, size = 0.7) + 
+  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  scale_color_brewer(palette = "Dark2") +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", size = 0.2) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
+  labs(x = "Estimated BRM interceptions per flight",
+       y = "") 
+Fig_Air_Loca_A
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_A.png", width = 16, height = 10, units = "cm", Fig_Air_Loca_A, dpi = 600)
+
+
+
+##FF Detections
+Loca_ems4 <- emmeans(Pass_BAS_full_DD_total_FF_glm, ~Location)
+Loca_ems5 <- emmeans(Pass_BAS_full_Declarin_FF_glm, ~Location)
+Loca_ems6 <- emmeans(Pass_BAS_full_Detectin_FF_glm, ~Location)
+
+#pairwise
+Loca_pairs4 <- as.data.frame(summary(pairs(Loca_ems4), point.est = mean))
+Loca_pairs5 <- as.data.frame(summary(pairs(Loca_ems5), point.est = mean))
+Loca_pairs6 <- as.data.frame(summary(pairs(Loca_ems6), point.est = mean))
+
+#text
+Loca_ems4 <- as.data.frame(Loca_ems4) 
+Loca_ems5 <- as.data.frame(Loca_ems5) 
+Loca_ems6 <- as.data.frame(Loca_ems6) 
+
+Loca_ems4$Variable <- "N_Total_FF" 
+Loca_ems5$Variable <- "N_Declarations_FF" 
+Loca_ems6$Variable <- "N_Detections_FF" 
+
+Loca_ems4$Position <- c(20:15)
+Loca_ems5$Position <- c(13:8)
+Loca_ems6$Position <- c(6:1)
+
+Loca_emsB <- rbind(Loca_ems4,Loca_ems5,Loca_ems6)
+Loca_emsB$Variable <- ordered(Loca_emsB$Variable, levels = c("N_Total_FF", "N_Declarations_FF", "N_Detections_FF"))
+
+Loca_emsB$N_mean <- exp(Loca_emsB$emmean)
+Loca_emsB$N_lci <- exp(Loca_emsB$asymp.LCL)
+Loca_emsB$N_uci <- exp(Loca_emsB$asymp.UCL)
+
+#Loca_emsB$Location <- gsub(".*\\_", "", Loca_emsB$Location) 
+
+Loca_emsB$text <- paste(Loca_emsB$Location, round(exp(Loca_emsB$emmean), digits = 2), sep = ': ')
+Loca_emsB$text <- paste(Loca_emsB$text, round(exp(Loca_emsB$asymp.LCL), digits = 2), sep = ' [')
+Loca_emsB$text <- paste(Loca_emsB$text, round(exp(Loca_emsB$asymp.UCL), digits = 2), sep = ', ')
+Loca_emsB$text <- paste(Loca_emsB$text, '', sep = ']')
+#Loca_emsB$text
+
+Fig_Air_Loca_B <- ggplot(Loca_emsB, aes(x = N_mean, y = Position)) +
+  scale_x_continuous(limits = c(-0.8, 2.2), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+  scale_y_continuous(limits = c(0, 21), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.85,0.175),
+        legend.title = element_blank(),
+        axis.text.y = element_blank(), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(aes(color = Variable), x = Loca_emsB$N_lci, y = Loca_emsB$Position, xend = Loca_emsB$N_uci, yend = Loca_emsB$Position, size = 0.7) + 
+  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  scale_color_brewer(palette = "Dark2") +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", size = 0.2) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
+  labs(x = "Estimated FF host interceptions per flight",
+       y = "") 
+Fig_Air_Loca_B
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_B.png", width = 16, height = 10, units = "cm", Fig_Air_Loca_B, dpi = 600)
+
+
+
+
+#### 2B. Outputs: Regime ####
+
+Means_Regime <-setDT(Pass_BAS_dat_processed)[ , list(mean_regime = mean(N_Total), 
+                                                     mean_FF_regime = mean(N_Total_FF)), 
+                                              by = .(Regime)]
+Means_Regime
+
+Pass_BAS_dat_processed_1 <- subset(Pass_BAS_dat_processed, Location == "Airport_A")
+Pass_BAS_dat_processed_2 <- subset(Pass_BAS_dat_processed, Location == "Airport_B")
+Pass_BAS_dat_processed_3 <- subset(Pass_BAS_dat_processed, Location == "Airport_C")
+Pass_BAS_dat_processed_4 <- subset(Pass_BAS_dat_processed, Location == "Airport_D")
+Pass_BAS_dat_processed_5 <- subset(Pass_BAS_dat_processed, Location == "Airport_E")
+Pass_BAS_dat_processed_6 <- subset(Pass_BAS_dat_processed, Location == "Airport_F")
+
+LocReg <- setDT(Pass_BAS_dat_processed)[ , list(N_Total_mean = mean(N_Total), 
+                                                N_Declarations_mean = mean(N_Declarations),
+                                                N_Detections_mean = mean(N_Detections)), 
+                                         by = .(Regime)]
+LocReg$Location <- "All"
+
+LocReg_1 <- setDT(Pass_BAS_dat_processed_1)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_1$Location <- "Airport_A"
+
+LocReg_2 <- setDT(Pass_BAS_dat_processed_2)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_2$Location <- "Airport_B"
+
+LocReg_3 <- setDT(Pass_BAS_dat_processed_3)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_3$Location <- "Airport_C"
+
+LocReg_4 <- setDT(Pass_BAS_dat_processed_4)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_4$Location <- "Airport_D"
+
+LocReg_5 <- setDT(Pass_BAS_dat_processed_5)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_5$Location <- "Airport_E"
+
+LocReg_6 <- setDT(Pass_BAS_dat_processed_6)[ , list(N_Total_mean = mean(N_Total), 
+                                                    N_Declarations_mean = mean(N_Declarations),
+                                                    N_Detections_mean = mean(N_Detections)), 
+                                             by = .(Regime)]
+LocReg_6$Location <- "Airport_F"
+
+
+LocReg_all <- rbind(LocReg,LocReg_1,LocReg_2,LocReg_3,LocReg_4,LocReg_5,LocReg_6)
+
+LocReg_all$Regime <- case_when(
+  LocReg_all$Regime %in% c("BI") ~ "one BI",
+  LocReg_all$Regime %in% c("BI x 2") ~ "two BIs",
+  LocReg_all$Regime %in% c("DDT") ~ "one DDT",
+  LocReg_all$Regime %in% c("DDT + BI") ~ "one DDT & BI",
+  LocReg_all$Regime %in% c("DDT x2") ~ "two DDTs",
+  .default = LocReg_all$Regime
+)
+
+LocReg_all$Regime <- ordered(LocReg_all$Regime, levels = c("one BI", "two BIs", "one DDT", "one DDT & BI", "two DDTs"))
+LocReg_all$Location <- ordered(LocReg_all$Location, levels = c("All","Airport_A","Airport_B","Airport_C", "Airport_D", "Airport_E", "Airport_F"))
+
+
+Fig_Air_Regi_Obvs <- ggplot(LocReg_all, aes(x = N_Detections_mean, y = N_Declarations_mean)) +
+  scale_y_continuous(limits = c(0, 1.2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0)) +
+  scale_x_continuous(limits = c(0, 2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+  theme(legend.position = 'right',
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8, colour = "black"), 
+        axis.text.x = element_text(size = 8, colour = "black"), 
+        axis.text.y = element_text(size = 8, colour = "black"), 
+        axis.title.x  = element_text(size=10, vjust = 0.1),
+        axis.title.y  = element_text(size=10, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1),
+        panel.background = element_rect(fill = "white")) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.7) +
+  geom_hline(yintercept = 0, linetype = 2, colour = "black", size = 0.7) +
+  geom_segment(color = 'grey', x =0, y = 0.5, xend = 0.5, yend = 0, size = 0.45, linetype=5) + 
+  geom_segment(color = 'grey', x =0, y = 1.0, xend = 1.0, yend = 0, size = 0.45, linetype=5) + 
+  geom_segment(color = 'grey', x =0, y = 1.5, xend = 1.5, yend = 0, size = 0.45, linetype=5) + 
+  geom_segment(color = 'grey', x =0, y = 2.0, xend = 2.0, yend = 0, size = 0.45, linetype=5) + 
+  geom_segment(color = 'grey', x =0, y = 2.5, xend = 2.5, yend = 0, size = 0.45, linetype=5) + 
+  geom_segment(color = 'grey', x =0, y = 3.0, xend = 3.0, yend = 0, size = 0.45, linetype=5) + 
+  geom_point(aes(shape = Regime, color = Location), size = 5.5, alpha = 0.85) +
+  scale_color_brewer(palette = "Set1") +
+  labs(x = "Average BRM detections per flight",
+       y = "Average BRM declarations per flight") 
+Fig_Air_Regi_Obvs
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_Obvs.png", width = 22, height = 11, units = "cm", Fig_Air_Regi_Obvs, dpi = 600)
+
+
+##BRM Detections
+
+Regi_ems1 <- emmeans(Pass_BAS_full_DD_total_glm, ~Regime)
+Regi_ems2 <- emmeans(Pass_BAS_full_Declarin_glm, ~Regime)
+Regi_ems6 <- emmeans(Pass_BAS_full_Detectin_glm, ~Regime)
+
+Regi_pairs1 <- as.data.frame(summary(pairs(Regi_ems1), point.est = mean))
+Regi_pairs2 <- as.data.frame(summary(pairs(Regi_ems2), point.est = mean))
+Regi_pairs3 <- as.data.frame(summary(pairs(Regi_ems6), point.est = mean))
+
+Regi_ems1 <- as.data.frame(Regi_ems1) 
+Regi_ems2 <- as.data.frame(Regi_ems2) 
+Regi_ems6 <- as.data.frame(Regi_ems6) 
+
+Regi_ems1$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+Regi_ems2$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+Regi_ems6$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+
+Regi_ems1$Variable <- "N_Total" 
+Regi_ems2$Variable <- "N_Declarations" 
+Regi_ems6$Variable <- "N_Detections" 
+
+Regi_ems1$Position <- c(13:17)
+Regi_ems2$Position <- c(7:11)
+Regi_ems6$Position <- c(1:5)
+
+Regi_emsA <- rbind(Regi_ems1,Regi_ems2,Regi_ems6)
+Regi_emsA$Variable <- ordered(Regi_emsA$Variable, levels = c("N_Total", "N_Declarations", "N_Detections"))
+
+Regi_emsA$N_mean <- exp(Regi_emsA$emmean)
+Regi_emsA$N_lci <- exp(Regi_emsA$asymp.LCL)
+Regi_emsA$N_uci <- exp(Regi_emsA$asymp.UCL)
+
+Regi_emsA$text <- paste(Regi_emsA$Regime, round(exp(Regi_emsA$emmean), digits = 2), sep = ': ')
+Regi_emsA$text <- paste(Regi_emsA$text, round(exp(Regi_emsA$asymp.LCL), digits = 2), sep = ' [')
+Regi_emsA$text <- paste(Regi_emsA$text, round(exp(Regi_emsA$asymp.UCL), digits = 2), sep = ', ')
+Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
+#Regi_emsA$text
+
+Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
+  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.85,0.175),
+        legend.title = element_blank(),
+        axis.text.y = element_blank(), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(aes(color = Variable), x = Regi_emsA$N_lci, y = Regi_emsA$Position, xend = Regi_emsA$N_uci, yend = Regi_emsA$Position, size = 0.7) + 
+  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  scale_color_brewer(palette = "Dark2") +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
+  labs(x = "Estimated BRM interceptions per flight",
+       y = "") 
+Fig_Air_Regi_A
+
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_A.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_A, dpi = 600)
+
+
+
+##FF Detections
+
+Regi_ems4 <- emmeans(Pass_BAS_full_DD_total_FF_glm, ~Regime)
+Regi_ems5 <- emmeans(Pass_BAS_full_Declarin_FF_glm, ~Regime)
+Regi_ems3 <- emmeans(Pass_BAS_full_Detectin_FF_glm, ~Regime)
+
+Regi_pairs4 <- as.data.frame(summary(pairs(Regi_ems4), point.est = mean))
+Regi_pairs5 <- as.data.frame(summary(pairs(Regi_ems5), point.est = mean))
+Regi_pairs6 <- as.data.frame(summary(pairs(Regi_ems3), point.est = mean))
+
+Regi_ems4 <- as.data.frame(Regi_ems4) 
+Regi_ems5 <- as.data.frame(Regi_ems5) 
+Regi_ems3 <- as.data.frame(Regi_ems3) 
+
+Regi_ems4$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+Regi_ems5$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+Regi_ems3$Regime <- c("One BI", "Two BIs", "One DDT", "One DDT & one BI", "Two DDTs")
+
+Regi_ems4$Variable <- "N_Total_FF" 
+Regi_ems5$Variable <- "N_Declarations_FF" 
+Regi_ems3$Variable <- "N_Detections_FF" 
+
+Regi_ems4$Position <- c(13:17)
+Regi_ems5$Position <- c(7:11)
+Regi_ems3$Position <- c(1:5)
+
+Regi_emsB <- rbind(Regi_ems4,Regi_ems5,Regi_ems3)
+Regi_emsB$Variable <- ordered(Regi_emsB$Variable, levels = c("N_Total_FF", "N_Declarations_FF", "N_Detections_FF"))
+
+Regi_emsB$N_mean <- exp(Regi_emsB$emmean)
+Regi_emsB$N_lci <- exp(Regi_emsB$asymp.LCL)
+Regi_emsB$N_uci <- exp(Regi_emsB$asymp.UCL)
+
+Regi_emsB$text <- paste(Regi_emsB$Regime, round(exp(Regi_emsB$emmean), digits = 2), sep = ': ')
+Regi_emsB$text <- paste(Regi_emsB$text, round(exp(Regi_emsB$asymp.LCL), digits = 2), sep = ' [')
+Regi_emsB$text <- paste(Regi_emsB$text, round(exp(Regi_emsB$asymp.UCL), digits = 2), sep = ', ')
+Regi_emsB$text <- paste(Regi_emsB$text, '', sep = ']')
+#Regi_emsB$text
+
+Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
+  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.85,0.175),
+        legend.title = element_blank(),
+        axis.text.y = element_blank(), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(aes(color = Variable), x = Regi_emsB$N_lci, y = Regi_emsB$Position, xend = Regi_emsB$N_uci, yend = Regi_emsB$Position, size = 0.7) + 
+  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  scale_color_brewer(palette = "Dark2") +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
+  labs(x = "Estimated FF host interceptions per flight",
+       y = "") 
+Fig_Air_Regi_B
+
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_B.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_B, dpi = 600)
+
+
+
+
