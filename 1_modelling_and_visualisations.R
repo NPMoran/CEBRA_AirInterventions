@@ -143,15 +143,6 @@ Pass_BAS_full_Detectin_FF_glm.ranef <- as.data.frame(ranef(Pass_BAS_full_Detecti
 
 
 
-
-
-#Model 1, glmer implementation
-Radslop_test<- glmer(N_Total ~ 1 + Location + Regime + (sqrt.PassengerCount.Z|FlightOrigin), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-
-
-
-
 #### 2A. Outputs: Location ####
 
 Means_Location<-setDT(Pass_BAS_dat_processed)[ , list(mean_location = mean(N_Total),
@@ -160,8 +151,7 @@ Means_Location<-setDT(Pass_BAS_dat_processed)[ , list(mean_location = mean(N_Tot
 Means_Location
 
 
-##BRM Detections
-
+##Plot: BRM Interceptions
 Loca_ems1 <- emmeans(Pass_BAS_full_DD_total_glm, ~Location)
 Loca_ems2 <- emmeans(Pass_BAS_full_Declarin_glm, ~Location)
 Loca_ems3 <- emmeans(Pass_BAS_full_Detectin_glm, ~Location)
@@ -225,7 +215,8 @@ Fig_Air_Loca_A
 
 
 
-##FF Detections
+
+##Plot: FF Interceptions
 Loca_ems4 <- emmeans(Pass_BAS_full_DD_total_FF_glm, ~Location)
 Loca_ems5 <- emmeans(Pass_BAS_full_Declarin_FF_glm, ~Location)
 Loca_ems6 <- emmeans(Pass_BAS_full_Detectin_FF_glm, ~Location)
@@ -299,6 +290,7 @@ Means_Regime <-setDT(Pass_BAS_dat_processed)[ , list(mean_regime = mean(N_Total)
                                               by = .(Regime)]
 Means_Regime
 
+##Plot: FF Interceptions by Location X Regime
 Pass_BAS_dat_processed_1 <- subset(Pass_BAS_dat_processed, Location == "Airport_A")
 Pass_BAS_dat_processed_2 <- subset(Pass_BAS_dat_processed, Location == "Airport_B")
 Pass_BAS_dat_processed_3 <- subset(Pass_BAS_dat_processed, Location == "Airport_C")
@@ -363,7 +355,6 @@ LocReg_all$Regime <- case_when(
 LocReg_all$Regime <- ordered(LocReg_all$Regime, levels = c("one BI", "two BIs", "one DDT", "one DDT & BI", "two DDTs"))
 LocReg_all$Location <- ordered(LocReg_all$Location, levels = c("All","Airport_A","Airport_B","Airport_C", "Airport_D", "Airport_E", "Airport_F"))
 
-
 Fig_Air_Regi_Obvs <- ggplot(LocReg_all, aes(x = N_Detections_mean, y = N_Declarations_mean)) +
   scale_y_continuous(limits = c(0, 1.2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0)) +
   scale_x_continuous(limits = c(0, 2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
@@ -393,8 +384,7 @@ Fig_Air_Regi_Obvs
 #ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_Obvs.png", width = 22, height = 11, units = "cm", Fig_Air_Regi_Obvs, dpi = 600)
 
 
-##BRM Detections
-
+##Plot: BRM Interceptions
 Regi_ems1 <- emmeans(Pass_BAS_full_DD_total_glm, ~Regime)
 Regi_ems2 <- emmeans(Pass_BAS_full_Declarin_glm, ~Regime)
 Regi_ems6 <- emmeans(Pass_BAS_full_Detectin_glm, ~Regime)
@@ -456,12 +446,12 @@ Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
        y = "") 
 Fig_Air_Regi_A
 
-ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_A.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_A, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_A.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_A, dpi = 600)
 
 
 
-##FF Detections
 
+##Plot: FF Interceptions
 Regi_ems4 <- emmeans(Pass_BAS_full_DD_total_FF_glm, ~Regime)
 Regi_ems5 <- emmeans(Pass_BAS_full_Declarin_FF_glm, ~Regime)
 Regi_ems3 <- emmeans(Pass_BAS_full_Detectin_FF_glm, ~Regime)
@@ -523,8 +513,444 @@ Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
        y = "") 
 Fig_Air_Regi_B
 
-ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_B.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_B, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_B.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_B, dpi = 600)
 
+
+
+
+#### 2C. Outputs: Bag searches ####
+## -  extracting effect estimates as per-(sqrt)unit percentage effects
+Eff_Bag1 <- as.data.frame(Pass_BAS_full_DD_total_glm.fixef[11,])
+Eff_Bag2 <- as.data.frame(Pass_BAS_full_Declarin_glm.fixef[11,])
+Eff_Bag3 <- as.data.frame(Pass_BAS_full_Detectin_glm.fixef[11,])
+Eff_Bag4 <- as.data.frame(Pass_BAS_full_DD_total_FF_glm.fixef[11,])
+Eff_Bag5 <- as.data.frame(Pass_BAS_full_Declarin_FF_glm.fixef[11,])
+Eff_Bag6 <- as.data.frame(Pass_BAS_full_Detectin_FF_glm.fixef[11,])
+colnames(Eff_Bag1) <- c("A","B","C")
+colnames(Eff_Bag2) <- c("A","B","C")
+colnames(Eff_Bag3) <- c("A","B","C")
+colnames(Eff_Bag4) <- c("A","B","C")
+colnames(Eff_Bag5) <- c("A","B","C")
+colnames(Eff_Bag6) <- c("A","B","C")
+Eff_Bag <- rbind(Eff_Bag1,Eff_Bag2,Eff_Bag3,Eff_Bag4,Eff_Bag5,Eff_Bag6)
+
+#converting the effect to a proportional change in root-bag searches (i.e. reverse z-scaling)
+Eff_Bag$Exp_est <- exp(Eff_Bag$A)^(1/(sd(subset(Pass_BAS_dat_processed.mod, BagSearchCount != 'NA')$sqrt.BagSearchCount)))
+Eff_Bag$LCI <- exp(Eff_Bag$B)^(1/(sd(subset(Pass_BAS_dat_processed.mod, BagSearchCount != 'NA')$sqrt.BagSearchCount)))
+Eff_Bag$UCI <- exp(Eff_Bag$C)^(1/(sd(subset(Pass_BAS_dat_processed.mod, BagSearchCount != 'NA')$sqrt.BagSearchCount)))
+
+Eff_Bag$Effect_percent <- paste(round(((Eff_Bag$Exp_est-1)*100), digits = 1), round(((Eff_Bag$LCI-1)*100), digits = 1), sep = "% [")
+Eff_Bag$Effect_percent <- paste(Eff_Bag$Effect_percent, round(((Eff_Bag$UCI-1)*100), digits = 1), sep = "%, ")
+Eff_Bag$Effect_percent <- paste(Eff_Bag$Effect_percent, "%]", sep = "")
+Eff_Bag$Variable <- c("N_Total","N_Declarations","N_Detections","N_Total_FF","N_Declarations_FF","N_Detections_FF")
+Eff_Bag <- Eff_Bag[,-1:-6]
+Eff_Bag <- Eff_Bag[,c(2,1)]
+#knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
+
+
+
+#### 2D. Outputs: Passenger Counts ####
+## -  extracting effect estimates as per-(sqrt)unit percentage effects
+Eff_Pas1 <- as.data.frame(Pass_BAS_full_DD_total_glm.fixef[12,])
+Eff_Pas2 <- as.data.frame(Pass_BAS_full_Declarin_glm.fixef[12,])
+Eff_Pas3 <- as.data.frame(Pass_BAS_full_Detectin_glm.fixef[12,])
+Eff_Pas4 <- as.data.frame(Pass_BAS_full_DD_total_FF_glm.fixef[12,])
+Eff_Pas5 <- as.data.frame(Pass_BAS_full_Declarin_FF_glm.fixef[12,])
+Eff_Pas6 <- as.data.frame(Pass_BAS_full_Detectin_FF_glm.fixef[12,])
+colnames(Eff_Pas1) <- c("A","B","C")
+colnames(Eff_Pas2) <- c("A","B","C")
+colnames(Eff_Pas3) <- c("A","B","C")
+colnames(Eff_Pas4) <- c("A","B","C")
+colnames(Eff_Pas5) <- c("A","B","C")
+colnames(Eff_Pas6) <- c("A","B","C")
+
+Eff_Pas <- rbind(Eff_Pas1,Eff_Pas2,Eff_Pas3,
+                 Eff_Pas4,Eff_Pas5,Eff_Pas6)
+
+#converting the effect to a proportional change in root-bag searches (i.e. reverse z-scaling)
+Eff_Pas$Exp_est <- exp(Eff_Pas$A)^(1/(sd(subset(Pass_BAS_dat_processed.mod, PassengerCount != 'NA')$sqrt.PassengerCount)))
+Eff_Pas$LCI <- exp(Eff_Pas$B)^(1/(sd(subset(Pass_BAS_dat_processed.mod, PassengerCount != 'NA')$sqrt.PassengerCount)))
+Eff_Pas$UCI <- exp(Eff_Pas$C)^(1/(sd(subset(Pass_BAS_dat_processed.mod, PassengerCount != 'NA')$sqrt.PassengerCount)))
+
+Eff_Pas$Effect_percent <- paste(round(((Eff_Pas$Exp_est-1)*100), digits = 1), round(((Eff_Pas$LCI-1)*100), digits = 1), sep = "% [")
+Eff_Pas$Effect_percent <- paste(Eff_Pas$Effect_percent, round(((Eff_Pas$UCI-1)*100), digits = 1), sep = "%, ")
+Eff_Pas$Effect_percent <- paste(Eff_Pas$Effect_percent, "%]", sep = "")
+Eff_Pas$Variable <- c("N_Total","N_Declarations","N_Detections","N_Total_FF","N_Declarations_FF","N_Detections_FF")
+Eff_Pas <- Eff_Pas[,-1:-6]
+Eff_Pas <- Eff_Pas[,c(2,1)]
+
+knitr::kable(Eff_Pas, "simple", align = "lc", row.names = FALSE)
+
+
+
+
+#### 2E. Outputs: Flight Origin/ Flight Number ####
+
+#Plots: BRM Interceptions X Origin
+Pass_BAS_full_DD_total_glm.FO <- subset(Pass_BAS_full_DD_total_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_DD_total_glm.FO$lci <- Pass_BAS_full_DD_total_glm.FO$condval - 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
+Pass_BAS_full_DD_total_glm.FO$uci <- Pass_BAS_full_DD_total_glm.FO$condval + 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
+Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[order(Pass_BAS_full_DD_total_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_DD_total_glm.FO$Position <- c(7:1)
+
+Fig_Air_Orig_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.3, 0.3), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_glm.FO$lci, y = Pass_BAS_full_DD_total_glm.FO$Position, xend = Pass_BAS_full_DD_total_glm.FO$uci, yend = Pass_BAS_full_DD_total_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total)", parse = TRUE)
+Fig_Air_Orig_A1
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A1.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A1, dpi = 600)
+
+
+Pass_BAS_full_Declarin_glm.FO <- subset(Pass_BAS_full_Declarin_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_Declarin_glm.FO$lci <- Pass_BAS_full_Declarin_glm.FO$condval - 1.96*(Pass_BAS_full_Declarin_glm.FO$condsd)
+Pass_BAS_full_Declarin_glm.FO$uci <- Pass_BAS_full_Declarin_glm.FO$condval + 1.96*(Pass_BAS_full_Declarin_glm.FO$condsd)
+Pass_BAS_full_Declarin_glm.FO <- Pass_BAS_full_Declarin_glm.FO[order(Pass_BAS_full_Declarin_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_Declarin_glm.FO$Position <- c(7:1)
+
+Fig_Air_Orig_A2 <- ggplot(Pass_BAS_full_Declarin_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.6, 0.6), expand = c(0, 0), breaks=c(-0.6, 0.0, 0.6)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_glm.FO$lci, y = Pass_BAS_full_Declarin_glm.FO$Position, xend = Pass_BAS_full_Declarin_glm.FO$uci, yend = Pass_BAS_full_Declarin_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.3, y = 0.6, size = 2.4, label = "italic(N_Declarations)", parse = TRUE)
+Fig_Air_Orig_A2
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A2.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A2, dpi = 600)
+
+
+
+Pass_BAS_full_Detectin_glm.FO <- subset(Pass_BAS_full_Detectin_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_Detectin_glm.FO$lci <- Pass_BAS_full_Detectin_glm.FO$condval - 1.96*(Pass_BAS_full_Detectin_glm.FO$condsd)
+Pass_BAS_full_Detectin_glm.FO$uci <- Pass_BAS_full_Detectin_glm.FO$condval + 1.96*(Pass_BAS_full_Detectin_glm.FO$condsd)
+Pass_BAS_full_Detectin_glm.FO <- Pass_BAS_full_Detectin_glm.FO[order(Pass_BAS_full_Detectin_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_Detectin_glm.FO$Position <- c(7:1)
+
+Fig_Air_Orig_A3 <- ggplot(Pass_BAS_full_Detectin_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.3, 0.3), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_glm.FO$lci, y = Pass_BAS_full_Detectin_glm.FO$Position, xend = Pass_BAS_full_Detectin_glm.FO$uci, yend = Pass_BAS_full_Detectin_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Detections)", parse = TRUE)
+Fig_Air_Orig_A3
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A3.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A3, dpi = 600)
+
+
+
+#Plots: FF Interceptions X Origin
+
+Pass_BAS_full_DD_total_FF_glm.FO <- subset(Pass_BAS_full_DD_total_FF_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_DD_total_FF_glm.FO$lci <- Pass_BAS_full_DD_total_FF_glm.FO$condval - 1.96*(Pass_BAS_full_DD_total_FF_glm.FO$condsd)
+Pass_BAS_full_DD_total_FF_glm.FO$uci <- Pass_BAS_full_DD_total_FF_glm.FO$condval + 1.96*(Pass_BAS_full_DD_total_FF_glm.FO$condsd)
+Pass_BAS_full_DD_total_FF_glm.FO <- Pass_BAS_full_DD_total_FF_glm.FO[order(Pass_BAS_full_DD_total_FF_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_DD_total_FF_glm.FO$Position <- c(7:1)
+
+Fig_Bir_Orig_B1 <- ggplot(Pass_BAS_full_DD_total_FF_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.3, 0.3), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_FF_glm.FO$lci, y = Pass_BAS_full_DD_total_FF_glm.FO$Position, xend = Pass_BAS_full_DD_total_FF_glm.FO$uci, yend = Pass_BAS_full_DD_total_FF_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total_FF)", parse = TRUE)
+Fig_Bir_Orig_B1
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_B1.png", width = 6, height = 5, units = "cm", Fig_Bir_Orig_B1, dpi = 600)
+
+
+Pass_BAS_full_Declarin_FF_glm.FO <- subset(Pass_BAS_full_Declarin_FF_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_Declarin_FF_glm.FO$lci <- Pass_BAS_full_Declarin_FF_glm.FO$condval - 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
+Pass_BAS_full_Declarin_FF_glm.FO$uci <- Pass_BAS_full_Declarin_FF_glm.FO$condval + 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
+Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[order(Pass_BAS_full_Declarin_FF_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_Declarin_FF_glm.FO$Position <- c(7:1)
+
+Fig_Bir_Orig_B2 <- ggplot(Pass_BAS_full_Declarin_FF_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.6, 0.6), expand = c(0, 0), breaks=c(-0.6, 0.0, 0.6)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_FF_glm.FO$lci, y = Pass_BAS_full_Declarin_FF_glm.FO$Position, xend = Pass_BAS_full_Declarin_FF_glm.FO$uci, yend = Pass_BAS_full_Declarin_FF_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.3, y = 0.6, size = 2.4, label = "italic(N_Declarations_FF)", parse = TRUE)
+Fig_Bir_Orig_B2
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_B2.png", width = 6, height = 5, units = "cm", Fig_Bir_Orig_B2, dpi = 600)
+
+
+
+Pass_BAS_full_Detectin_FF_glm.FO <- subset(Pass_BAS_full_Detectin_FF_glm.ranef, grpvar == "FlightOrigin")
+Pass_BAS_full_Detectin_FF_glm.FO$lci <- Pass_BAS_full_Detectin_FF_glm.FO$condval - 1.96*(Pass_BAS_full_Detectin_FF_glm.FO$condsd)
+Pass_BAS_full_Detectin_FF_glm.FO$uci <- Pass_BAS_full_Detectin_FF_glm.FO$condval + 1.96*(Pass_BAS_full_Detectin_FF_glm.FO$condsd)
+Pass_BAS_full_Detectin_FF_glm.FO <- Pass_BAS_full_Detectin_FF_glm.FO[order(Pass_BAS_full_Detectin_FF_glm.FO$condval,decreasing=TRUE),]
+Pass_BAS_full_Detectin_FF_glm.FO$Position <- c(7:1)
+
+Fig_Bir_Orig_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FO, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-0.4, 0.4), expand = c(0, 0), breaks=c(-0.4, 0.0, 0.4)) +
+  scale_y_continuous(limits = c(0.25, 7.75), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_FF_glm.FO$lci, y = Pass_BAS_full_Detectin_FF_glm.FO$Position, xend = Pass_BAS_full_Detectin_FF_glm.FO$uci, yend = Pass_BAS_full_Detectin_FF_glm.FO$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.385, vjust=-0.4, size = 2.3) +
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.2, y = 0.6, size = 2.4, label = "italic(N_Detections_FF)", parse = TRUE)
+Fig_Bir_Orig_B3
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_B3.png", width = 6, height = 5, units = "cm", Fig_Bir_Orig_B3, dpi = 600)
+
+
+
+
+#Plots: BRM Interceptions X Number
+Pass_BAS_full_DD_total_glm.FN <- subset(Pass_BAS_full_DD_total_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_DD_total_glm.FN$lci <- Pass_BAS_full_DD_total_glm.FN$condval - 1.96*(Pass_BAS_full_DD_total_glm.FN$condsd)
+Pass_BAS_full_DD_total_glm.FN$uci <- Pass_BAS_full_DD_total_glm.FN$condval + 1.96*(Pass_BAS_full_DD_total_glm.FN$condsd)
+Pass_BAS_full_DD_total_glm.FN <- Pass_BAS_full_DD_total_glm.FN[order(Pass_BAS_full_DD_total_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_DD_total_glm.FN$Position <- c(217:1)
+
+Fig_Air_Numb_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-1, 0.8), expand = c(0, 0), breaks=c(-0.8, 0.0, 0.8)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_glm.FN$lci, y = Pass_BAS_full_DD_total_glm.FN$Position, xend = Pass_BAS_full_DD_total_glm.FN$uci, yend = Pass_BAS_full_DD_total_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.97, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.4, y = 0.65, size = 2.4, label = "italic(N_Total)", parse = TRUE)
+Fig_Air_Numb_A1
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_A1.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_A1, dpi = 600)
+
+
+
+Pass_BAS_full_Declarin_glm.FN <- subset(Pass_BAS_full_Declarin_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_Declarin_glm.FN$lci <- Pass_BAS_full_Declarin_glm.FN$condval - 1.96*(Pass_BAS_full_Declarin_glm.FN$condsd)
+Pass_BAS_full_Declarin_glm.FN$uci <- Pass_BAS_full_Declarin_glm.FN$condval + 1.96*(Pass_BAS_full_Declarin_glm.FN$condsd)
+Pass_BAS_full_Declarin_glm.FN <- Pass_BAS_full_Declarin_glm.FN[order(Pass_BAS_full_Declarin_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_Declarin_glm.FN$Position <- c(217:1)
+#summary(Pass_BAS_full_Declarin_glm.FN)
+
+Fig_Air_Numb_A2 <- ggplot(Pass_BAS_full_Declarin_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-2.0, 1.5), expand = c(0, 0), breaks=c(-1.5, 0.0, 1.5)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_glm.FN$lci, y = Pass_BAS_full_Declarin_glm.FN$Position, xend = Pass_BAS_full_Declarin_glm.FN$uci, yend = Pass_BAS_full_Declarin_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.95, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.75, y = 0.65, size = 2.4, label = "italic(N_Declared)", parse = TRUE)
+Fig_Air_Numb_A2
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_A2.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_A2, dpi = 600)
+
+
+
+Pass_BAS_full_Detectin_glm.FN <- subset(Pass_BAS_full_Detectin_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_Detectin_glm.FN$lci <- Pass_BAS_full_Detectin_glm.FN$condval - 1.96*(Pass_BAS_full_Detectin_glm.FN$condsd)
+Pass_BAS_full_Detectin_glm.FN$uci <- Pass_BAS_full_Detectin_glm.FN$condval + 1.96*(Pass_BAS_full_Detectin_glm.FN$condsd)
+Pass_BAS_full_Detectin_glm.FN <- Pass_BAS_full_Detectin_glm.FN[order(Pass_BAS_full_Detectin_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_Detectin_glm.FN$Position <- c(217:1)
+#summary(Pass_BAS_full_Detectin_glm.FN)
+
+Fig_Air_Numb_A3 <- ggplot(Pass_BAS_full_Detectin_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-1.2, 1.0), expand = c(0, 0), breaks=c(-1.0, 0.0, 1.0)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_glm.FN$lci, y = Pass_BAS_full_Detectin_glm.FN$Position, xend = Pass_BAS_full_Detectin_glm.FN$uci, yend = Pass_BAS_full_Detectin_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.16, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.5, y = 0.65, size = 2.4, label = "italic(N_Detected)", parse = TRUE)
+Fig_Air_Numb_A3
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_A3.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_A3, dpi = 600)
+
+
+
+
+#Plots: FF Interceptions X Number
+Pass_BAS_full_DD_total_FF_glm.FN <- subset(Pass_BAS_full_DD_total_FF_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_DD_total_FF_glm.FN$lci <- Pass_BAS_full_DD_total_FF_glm.FN$condval - 1.96*(Pass_BAS_full_DD_total_FF_glm.FN$condsd)
+Pass_BAS_full_DD_total_FF_glm.FN$uci <- Pass_BAS_full_DD_total_FF_glm.FN$condval + 1.96*(Pass_BAS_full_DD_total_FF_glm.FN$condsd)
+Pass_BAS_full_DD_total_FF_glm.FN <- Pass_BAS_full_DD_total_FF_glm.FN[order(Pass_BAS_full_DD_total_FF_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_DD_total_FF_glm.FN$Position <- c(217:1)
+
+Fig_Air_Numb_B1 <- ggplot(Pass_BAS_full_DD_total_FF_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-1.2, 1.0), expand = c(0, 0), breaks=c(-1.0, 0.0, 1.0)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_FF_glm.FN$lci, y = Pass_BAS_full_DD_total_FF_glm.FN$Position, xend = Pass_BAS_full_DD_total_FF_glm.FN$uci, yend = Pass_BAS_full_DD_total_FF_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.16, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.5, y = 0.65, size = 2.4, label = "italic(N_Total_FF)", parse = TRUE)
+Fig_Air_Numb_B1
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_B1.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_B1, dpi = 600)
+
+
+Pass_BAS_full_Declarin_FF_glm.FN <- subset(Pass_BAS_full_Declarin_FF_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_Declarin_FF_glm.FN$lci <- Pass_BAS_full_Declarin_FF_glm.FN$condval - 1.96*(Pass_BAS_full_Declarin_FF_glm.FN$condsd)
+Pass_BAS_full_Declarin_FF_glm.FN$uci <- Pass_BAS_full_Declarin_FF_glm.FN$condval + 1.96*(Pass_BAS_full_Declarin_FF_glm.FN$condsd)
+Pass_BAS_full_Declarin_FF_glm.FN <- Pass_BAS_full_Declarin_FF_glm.FN[order(Pass_BAS_full_Declarin_FF_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_Declarin_FF_glm.FN$Position <- c(217:1)
+#summary(Pass_BAS_full_Declarin_FF_glm.FN)
+
+Fig_Air_Numb_B2 <- ggplot(Pass_BAS_full_Declarin_FF_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-2.1, 1.5), expand = c(0, 0), breaks=c(-1.5, 0.0, 1.5)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_FF_glm.FN$lci, y = Pass_BAS_full_Declarin_FF_glm.FN$Position, xend = Pass_BAS_full_Declarin_FF_glm.FN$uci, yend = Pass_BAS_full_Declarin_FF_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-2.04, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.75, y = 0.65, size = 2.4, label = "italic(N_Declared_FF)", parse = TRUE)
+Fig_Air_Numb_B2
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_B2.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_B2, dpi = 600)
+
+
+
+Pass_BAS_full_Detectin_FF_glm.FN <- subset(Pass_BAS_full_Detectin_FF_glm.ranef, grpvar == "FlightNumber:FlightOrigin")
+Pass_BAS_full_Detectin_FF_glm.FN$lci <- Pass_BAS_full_Detectin_FF_glm.FN$condval - 1.96*(Pass_BAS_full_Detectin_FF_glm.FN$condsd)
+Pass_BAS_full_Detectin_FF_glm.FN$uci <- Pass_BAS_full_Detectin_FF_glm.FN$condval + 1.96*(Pass_BAS_full_Detectin_FF_glm.FN$condsd)
+Pass_BAS_full_Detectin_FF_glm.FN <- Pass_BAS_full_Detectin_FF_glm.FN[order(Pass_BAS_full_Detectin_FF_glm.FN$condval,decreasing=TRUE),]
+Pass_BAS_full_Detectin_FF_glm.FN$Position <- c(217:1)
+#summary(Pass_BAS_full_Detectin_FF_glm.FN)
+
+Fig_Air_Numb_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FN, aes(x = condval, y = Position)) +
+  scale_x_continuous(limits = c(-1.35, 1.1), expand = c(0, 0), breaks=c(-1.1, 0.0, 1.1)) +
+  scale_y_continuous(limits = c(-1, 219), expand = c(0, 0), breaks=NULL) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
+  theme(legend.position = 'none',
+        axis.text.y = element_blank(), 
+        axis.ticks.y = element_blank(), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
+        axis.line.x = element_line(colour = "black", size = 0.5),
+        panel.background = element_rect(fill = "white"),
+        axis.title.x  = element_text(size=9, vjust = 0.1),
+        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+  geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_FF_glm.FN$lci, y = Pass_BAS_full_Detectin_FF_glm.FN$Position, xend = Pass_BAS_full_Detectin_FF_glm.FN$uci, yend = Pass_BAS_full_Detectin_FF_glm.FN$Position, size = 0.4) + 
+  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.31, vjust=0.5, size = 1.2) +
+  labs(x = "Intercept estimates by flight number",
+       y = "") +
+  annotate("text", x = 0.55, y = 0.65, size = 2.4, label = "italic(N_Detected_FF)", parse = TRUE)
+Fig_Air_Numb_B3
+
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_B3.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_B3, dpi = 600)
 
 
 
