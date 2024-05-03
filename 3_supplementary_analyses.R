@@ -15,8 +15,8 @@ library(lme4); library(lmerTest);  library(car); library(performance); library(e
 #### S.1. BRM FF Host interception compositions ####
 
 #Data manually anonymised from "passengers-compliance-report_anonymised.csv"
-Pass_BAS_comdat <- read.csv('~/CEBRA_AirInterventions/Pass_BAB_commdat_danon.csv', strip.white = TRUE)
-Pass_BAS_comdat_FF <- read.csv('~/CEBRA_AirInterventions/Pass_BAB_commdat_FF_danon.csv', strip.white = TRUE)
+Pass_BAS_comdat <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_commdat_danon.csv', strip.white = TRUE)
+Pass_BAS_comdat_FF <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_comdat_FF_danon.csv', strip.white = TRUE)
 
 Pass_BAS_comdat <- as_tibble(Pass_BAS_comdat)
 Pass_BAS_comdat$ArrivalTime <- ymd_hms(Pass_BAS_comdat$ArrivalTime)
