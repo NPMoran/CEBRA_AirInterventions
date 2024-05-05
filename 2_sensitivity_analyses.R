@@ -174,7 +174,7 @@ Pass_BAS_full_DD_total_brm_ngb <- brm(N_Total ~ 1 + Location + Regime + sqrt.Bag
                         chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
                         backend = "cmdstanr", threads = threading(4))
 end_time2 <- Sys.time()
-#end_time2 - start_time2 #Time difference of ... hours
+#end_time2 - start_time2 #Time difference of 48.24464 hours
 summary(Pass_BAS_full_DD_total_brm_ngb)
 save(Pass_BAS_full_DD_total_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngb.RData")
 #plot(Pass_BAS_full_DD_total_brm_ngb)
@@ -204,7 +204,7 @@ Pass_BAS_full_DD_total_brm_ngbzif <- brm(N_Total ~ 1 + Location + Regime + sqrt.
                         chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
                         backend = "cmdstanr", threads = threading(4))
 end_time3 <- Sys.time()
-#end_time3 - start_time3 #Time difference of ... hours
+#end_time3 - start_time3 #Time difference of 1.362396 hours
 summary(Pass_BAS_full_DD_total_brm_ngbzif)
 save(Pass_BAS_full_DD_total_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
 #plot(Pass_BAS_full_DD_total_brm_ngbzif)
