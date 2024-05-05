@@ -50,31 +50,31 @@ sum(Pass_BAS_dat_processed.mod$N_Total) #66617
 
 
 
-#Model 1, glmer implementation
-Pass_BAS_full_DD_total_glm <- glmer(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-##Model 2, glmer implementation
-Pass_BAS_full_Declarin_glm <- glmer(N_Declarations ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod , control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-##Model 3, glmer implementation
-Pass_BAS_full_Detectin_glm <- glmer(N_Detections ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-##Model 4, glmer implementation
-Pass_BAS_full_DD_total_FF_glm <- glmer(N_Total_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-##Model 5, glmer implementation
-Pass_BAS_full_Declarin_FF_glm <- glmer(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-##Model 6, glmer implementation
-Pass_BAS_full_Detectin_FF_glm <- glmer(N_Detections_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
-
-save(Pass_BAS_full_DD_total_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
-save(Pass_BAS_full_Declarin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
-save(Pass_BAS_full_Detectin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.RData")
-save(Pass_BAS_full_DD_total_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.RData")
-save(Pass_BAS_full_Declarin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.RData")
-save(Pass_BAS_full_Detectin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData")
+##Model 1, glmer implementation
+#Pass_BAS_full_DD_total_glm <- glmer(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+###Model 2, glmer implementation
+#Pass_BAS_full_Declarin_glm <- glmer(N_Declarations ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod , control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+###Model 3, glmer implementation
+#Pass_BAS_full_Detectin_glm <- glmer(N_Detections ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+###Model 4, glmer implementation
+#Pass_BAS_full_DD_total_FF_glm <- glmer(N_Total_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+###Model 5, glmer implementation
+#Pass_BAS_full_Declarin_FF_glm <- glmer(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+###Model 6, glmer implementation
+#Pass_BAS_full_Detectin_FF_glm <- glmer(N_Detections_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber), family = poisson, data=Pass_BAS_dat_processed.mod, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
+#
+#
+#save(Pass_BAS_full_DD_total_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
+#save(Pass_BAS_full_Declarin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
+#save(Pass_BAS_full_Detectin_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_glm.RData")
+#save(Pass_BAS_full_DD_total_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_FF_glm.RData")
+#save(Pass_BAS_full_Declarin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.RData")
+#save(Pass_BAS_full_Detectin_FF_glm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData")
 
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
@@ -203,8 +203,8 @@ Fig_Air_Loca_A <- ggplot(Loca_emsA, aes(x = N_mean, y = Position)) +
   geom_segment(aes(color = Variable), x = Loca_emsA$N_lci, y = Loca_emsA$Position, xend = Loca_emsA$N_uci, yend = Loca_emsA$Position, size = 0.7) + 
   geom_point(aes(color = Variable), shape = 19, size = 2) +
   scale_color_brewer(palette = "Dark2") +
-  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", size = 0.2) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", linewidth = 0.5) +
+  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", linewidth = 0.2) +
   geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated BRM interceptions per flight",
@@ -263,15 +263,15 @@ Fig_Air_Loca_B <- ggplot(Loca_emsB, aes(x = N_mean, y = Position)) +
         legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
         axis.ticks.y = element_blank(), 
         axis.text.x = element_text(size = 7, colour = "black"), 
-        axis.line.x = element_line(colour = "black", size = 0.5),
+        axis.line.x = element_line(colour = "black", linewidth = 0.5),
         panel.background = element_rect(fill = "white"),
         axis.title.x  = element_text(size=9, vjust = 0.1),
-        panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
+        panel.border = element_rect(colour = "black", fill=NA, linewidth = 1)) +
   geom_segment(aes(color = Variable), x = Loca_emsB$N_lci, y = Loca_emsB$Position, xend = Loca_emsB$N_uci, yend = Loca_emsB$Position, size = 0.7) + 
   geom_point(aes(color = Variable), shape = 19, size = 2) +
   scale_color_brewer(palette = "Dark2") +
-  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", size = 0.2) +
+  geom_vline(xintercept = 0, linetype = 2, colour = "black", linewidth = 0.5) +
+  geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", linewidth = 0.2) +
   geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated FF host interceptions per flight",
@@ -545,7 +545,7 @@ Eff_Bag$Effect_percent <- paste(Eff_Bag$Effect_percent, "%]", sep = "")
 Eff_Bag$Variable <- c("N_Total","N_Declarations","N_Detections","N_Total_FF","N_Declarations_FF","N_Detections_FF")
 Eff_Bag <- Eff_Bag[,-1:-6]
 Eff_Bag <- Eff_Bag[,c(2,1)]
-#knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
+knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
 
 
 
@@ -578,7 +578,6 @@ Eff_Pas$Effect_percent <- paste(Eff_Pas$Effect_percent, "%]", sep = "")
 Eff_Pas$Variable <- c("N_Total","N_Declarations","N_Detections","N_Total_FF","N_Declarations_FF","N_Detections_FF")
 Eff_Pas <- Eff_Pas[,-1:-6]
 Eff_Pas <- Eff_Pas[,c(2,1)]
-
 knitr::kable(Eff_Pas, "simple", align = "lc", row.names = FALSE)
 
 

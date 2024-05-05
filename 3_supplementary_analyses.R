@@ -216,9 +216,9 @@ Pass_BAS_dat_processed.mod_time$Year <- as.factor(Pass_BAS_dat_processed.mod_tim
 
 
 #Model 1T, glmer implementation with time
-#Pass_BAS_full_DD_total_glm_time <- glmer(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber) + (1|Year), family = poisson, data=Pass_BAS_dat_processed.mod_time, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
-
+Pass_BAS_full_DD_total_glm_time <- glmer(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + (1|FlightOrigin/FlightNumber) + (1|Year), family = poisson, data=Pass_BAS_dat_processed.mod_time, control=glmerControl(optimizer="bobyqa", optCtrl=list(maxfun=100000)))
 #save(Pass_BAS_full_DD_total_glm_time, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm_time.RData")
+
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm_time.RData")
 
