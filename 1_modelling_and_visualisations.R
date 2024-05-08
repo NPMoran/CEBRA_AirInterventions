@@ -90,6 +90,15 @@ load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData
 #summary(Pass_BAS_full_Declarin_FF_glm)
 #summary(Pass_BAS_full_Detectin_FF_glm)
 
+#r2_nakagawa(Pass_BAS_full_DD_total_glm)
+#r2_nakagawa(Pass_BAS_full_Declarin_glm)
+#r2_nakagawa(Pass_BAS_full_Detectin_glm)
+#r2_nakagawa(Pass_BAS_full_DD_total_FF_glm)
+#r2_nakagawa(Pass_BAS_full_Declarin_FF_glm)
+#r2_nakagawa(Pass_BAS_full_Detectin_FF_glm)
+
+
+
 
 
 Pass_BAS_full_DD_total_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_DD_total_glm))

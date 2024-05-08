@@ -217,11 +217,15 @@ thinning <- 2
 #                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
 #                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
 #                        backend = "cmdstanr", threads = threading(4))
-#summary(Pass_BAS_full_Declarin_FF_brm_ngbzif)
+summary(Pass_BAS_full_Declarin_FF_brm_ngbzif)
 #save(Pass_BAS_full_Declarin_FF_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
-##plot(Pass_BAS_full_Declarin_FF_brm_ngbzif)
+#plot(Pass_BAS_full_Declarin_FF_brm_ngbzif)
 
 
+
+#Original glm versions
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_glm.RData")
+load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_glm.RData")
 
 #Bayesian brms versions
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm.RData")
@@ -243,6 +247,12 @@ load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngb.R
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
 
+
+#r2_nakagawa(Pass_BAS_full_DD_total_glm) # Conditional R2: 0.570, Marginal R2: 0.543
+#r2_bayes(Pass_BAS_full_DD_total_brm) # Conditional R2: 0.312 (95% CI [0.306, 0.318]) Marginal R2: 0.266 (95% CI [0.222, 0.307])
+#r2_bayes(Pass_BAS_full_DD_total_brm_zif) # Conditional R2: 0.281 (95% CI [0.274, 0.288]) Marginal R2: 0.243 (95% CI [0.205, 0.282])
+#r2_bayes(Pass_BAS_full_DD_total_brm_ngb) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.499, 0.500])
+#bayes_R2(Pass_BAS_full_DD_total_brm_ngbzif) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.500, 0.500])
 
 
 
