@@ -98,7 +98,7 @@ thinning <- 2
 #save(Pass_BAS_full_Detectin_brm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_brm.RData")
 ##plot(Pass_BAS_full_Detectin_brm)
 #
-##Model 4
+#Model 4
 #Pass_BAS_full_DD_total_FF_brm <- brm(N_Total_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z +  
 #                                       (1|FlightOrigin/FlightNumber),
 #                        data   = Pass_BAS_dat_processed.mod, 
@@ -133,92 +133,92 @@ thinning <- 2
 #summary(Pass_BAS_full_Detectin_FF_brm)
 #save(Pass_BAS_full_Detectin_FF_brm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_brm.RData")
 ##plot(Pass_BAS_full_Detectin_FF_brm)
-#
-#
-#
-##Brms implementation (zero inflation sensitivity) - 
-##Model 7
-#Pass_BAS_full_DD_total_brm_zif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                        (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = zero_inflated_poisson(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
-#summary(Pass_BAS_full_DD_total_brm_zif)
-#save(Pass_BAS_full_DD_total_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_zif.RData")
-##plot(Pass_BAS_full_DD_total_brm_zif)
-#
-##Model 8
-#Pass_BAS_full_Declarin_FF_brm_zif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                          (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = zero_inflated_poisson(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
-#summary(Pass_BAS_full_Declarin_FF_brm_zif)
-#save(Pass_BAS_full_Declarin_FF_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_zif.RData")
-##plot(Pass_BAS_full_Declarin_FF_brm_zif)
-#
-#
-#
-##Negative binomial implementation (overdispersion sensitivity) - 
-##Model 9
-#start_time2 <- Sys.time()
-#Pass_BAS_full_DD_total_brm_ngb <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                        (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = negbinomial(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
-#end_time2 <- Sys.time()
-##end_time2 - start_time2 #Time difference of 48.24464 hours
-#summary(Pass_BAS_full_DD_total_brm_ngb)
-#save(Pass_BAS_full_DD_total_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngb.RData")
-##plot(Pass_BAS_full_DD_total_brm_ngb)
-#
-##Model 10
-#Pass_BAS_full_Declarin_FF_brm_ngb <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                        (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = negbinomial(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
-#summary(Pass_BAS_full_Declarin_FF_brm_ngb)
-#save(Pass_BAS_full_Declarin_FF_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngb.RData")
-##plot(Pass_BAS_full_Declarin_FF_brm_ngb)
-#
-#
-#
-##Zero inflated negative binomial implementation (porque no los dos?) - 
-##Model 11
-#start_time3 <- Sys.time()
-#Pass_BAS_full_DD_total_brm_ngbzif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                        (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = zero_inflated_negbinomial(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
-#end_time3 <- Sys.time()
-##end_time3 - start_time3 #Time difference of 1.362396 hours
-#summary(Pass_BAS_full_DD_total_brm_ngbzif)
-#save(Pass_BAS_full_DD_total_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
-##plot(Pass_BAS_full_DD_total_brm_ngbzif)
-#
-##Model 12
-#Pass_BAS_full_Declarin_FF_brm_ngbzif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-#                                        (1|FlightOrigin/FlightNumber),
-#                        data   = Pass_BAS_dat_processed.mod, 
-#                        family = zero_inflated_negbinomial(link = "log"),
-#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-#                        backend = "cmdstanr", threads = threading(4))
+
+
+
+#Brms implementation (zero inflation sensitivity) - 
+#Model 7
+Pass_BAS_full_DD_total_brm_zif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                        (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = zero_inflated_poisson(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
+summary(Pass_BAS_full_DD_total_brm_zif)
+save(Pass_BAS_full_DD_total_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_zif.RData")
+#plot(Pass_BAS_full_DD_total_brm_zif)
+
+#Model 8
+Pass_BAS_full_Declarin_FF_brm_zif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                          (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = zero_inflated_poisson(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
+summary(Pass_BAS_full_Declarin_FF_brm_zif)
+save(Pass_BAS_full_Declarin_FF_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_zif.RData")
+#plot(Pass_BAS_full_Declarin_FF_brm_zif)
+
+
+
+#Negative binomial implementation (overdispersion sensitivity) - 
+#Model 9
+start_time2 <- Sys.time()
+Pass_BAS_full_DD_total_brm_ngb <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                        (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = negbinomial(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
+end_time2 <- Sys.time()
+#end_time2 - start_time2 #Time difference of 48.24464 mins
+summary(Pass_BAS_full_DD_total_brm_ngb)
+save(Pass_BAS_full_DD_total_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngb.RData")
+#plot(Pass_BAS_full_DD_total_brm_ngb)
+
+#Model 10
+Pass_BAS_full_Declarin_FF_brm_ngb <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                        (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = negbinomial(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
+summary(Pass_BAS_full_Declarin_FF_brm_ngb)
+save(Pass_BAS_full_Declarin_FF_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngb.RData")
+#plot(Pass_BAS_full_Declarin_FF_brm_ngb)
+
+
+
+#Zero inflated negative binomial implementation (porque no los dos?) - 
+#Model 11
+start_time3 <- Sys.time()
+Pass_BAS_full_DD_total_brm_ngbzif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                        (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = zero_inflated_negbinomial(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
+end_time3 <- Sys.time()
+#end_time3 - start_time3 #Time difference of 1.362396 hours
+summary(Pass_BAS_full_DD_total_brm_ngbzif)
+save(Pass_BAS_full_DD_total_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
+#plot(Pass_BAS_full_DD_total_brm_ngbzif)
+
+#Model 12
+Pass_BAS_full_Declarin_FF_brm_ngbzif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+                                        (1|FlightOrigin/FlightNumber),
+                        data   = Pass_BAS_dat_processed.mod, 
+                        family = zero_inflated_negbinomial(link = "log"),
+                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+                        backend = "cmdstanr", threads = threading(4))
 summary(Pass_BAS_full_Declarin_FF_brm_ngbzif)
-#save(Pass_BAS_full_Declarin_FF_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
+save(Pass_BAS_full_Declarin_FF_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
 #plot(Pass_BAS_full_Declarin_FF_brm_ngbzif)
 
 
