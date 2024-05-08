@@ -99,8 +99,6 @@ load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_glm.RData
 
 
 
-
-
 Pass_BAS_full_DD_total_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_DD_total_glm))
 Pass_BAS_full_Declarin_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Declarin_glm))
 Pass_BAS_full_Detectin_glm.fixef <- as.data.frame(fixef(Pass_BAS_full_Detectin_glm))
@@ -220,7 +218,7 @@ Fig_Air_Loca_A <- ggplot(Loca_emsA, aes(x = N_mean, y = Position)) +
        y = "") 
 Fig_Air_Loca_A
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_A.png", width = 16, height = 10, units = "cm", Fig_Air_Loca_A, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_A.png", width = 18, height = 10, units = "cm", Fig_Air_Loca_A, dpi = 600)
 
 
 
@@ -287,7 +285,7 @@ Fig_Air_Loca_B <- ggplot(Loca_emsB, aes(x = N_mean, y = Position)) +
        y = "") 
 Fig_Air_Loca_B
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_B.png", width = 16, height = 10, units = "cm", Fig_Air_Loca_B, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Loca_B.png", width = 18, height = 10, units = "cm", Fig_Air_Loca_B, dpi = 600)
 
 
 
@@ -390,7 +388,7 @@ Fig_Air_Regi_Obvs <- ggplot(LocReg_all, aes(x = N_Detections_mean, y = N_Declara
        y = "Average BRM declarations per flight") 
 Fig_Air_Regi_Obvs
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_Obvs.png", width = 22, height = 11, units = "cm", Fig_Air_Regi_Obvs, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_Obvs.png", width = 18, height = 9, units = "cm", Fig_Air_Regi_Obvs, dpi = 600)
 
 
 ##Plot: BRM Interceptions
@@ -432,11 +430,12 @@ Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 #Regi_emsA$text
 
 Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
   scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.85,0.175),
+  theme(legend.position = c(0.875,0.175),
         legend.title = element_blank(),
-        axis.text.y = element_blank(), 
+        axis.text.y = element_blank(),
+        legend.background = element_blank(),
         legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
         axis.ticks.y = element_blank(), 
         axis.text.x = element_text(size = 7, colour = "black"), 
@@ -449,13 +448,13 @@ Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated BRM interceptions per flight",
        y = "") 
 Fig_Air_Regi_A
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_A.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_A, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_A.png", width = 18, height = 8, units = "cm", Fig_Air_Regi_A, dpi = 600)
 
 
 
@@ -499,11 +498,12 @@ Regi_emsB$text <- paste(Regi_emsB$text, '', sep = ']')
 #Regi_emsB$text
 
 Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
   scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.85,0.175),
+  theme(legend.position = c(0.875,0.175),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
+        legend.background = element_blank(), 
         legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
         axis.ticks.y = element_blank(), 
         axis.text.x = element_text(size = 7, colour = "black"), 
@@ -516,13 +516,13 @@ Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated FF host interceptions per flight",
        y = "") 
 Fig_Air_Regi_B
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_B.png", width = 16, height = 9, units = "cm", Fig_Air_Regi_B, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_B.png", width = 18, height = 8, units = "cm", Fig_Air_Regi_B, dpi = 600)
 
 
 
@@ -621,7 +621,7 @@ Fig_Air_Orig_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FO, aes(x = condval, y = Po
   annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total)", parse = TRUE)
 Fig_Air_Orig_A1
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A1.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A1, dpi = 600)
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A1.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A1, dpi = 600)
 
 
 Pass_BAS_full_Declarin_glm.FO <- subset(Pass_BAS_full_Declarin_glm.ranef, grpvar == "FlightOrigin")
