@@ -133,93 +133,93 @@ thinning <- 2
 #summary(Pass_BAS_full_Detectin_FF_brm)
 #save(Pass_BAS_full_Detectin_FF_brm, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Detectin_FF_brm.RData")
 ##plot(Pass_BAS_full_Detectin_FF_brm)
-
-
-
-#Brms implementation (zero inflation sensitivity) - 
-#Model 7
-Pass_BAS_full_DD_total_brm_zif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                        (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = zero_inflated_poisson(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-summary(Pass_BAS_full_DD_total_brm_zif)
-save(Pass_BAS_full_DD_total_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_zif.RData")
-#plot(Pass_BAS_full_DD_total_brm_zif)
-
-#Model 8
-Pass_BAS_full_Declarin_FF_brm_zif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                          (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = zero_inflated_poisson(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-summary(Pass_BAS_full_Declarin_FF_brm_zif)
-save(Pass_BAS_full_Declarin_FF_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_zif.RData")
-#plot(Pass_BAS_full_Declarin_FF_brm_zif)
-
-
-
-#Negative binomial implementation (overdispersion sensitivity) - 
-#Model 9
-start_time2 <- Sys.time()
-Pass_BAS_full_DD_total_brm_ngb <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                        (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = negbinomial(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-end_time2 <- Sys.time()
-#end_time2 - start_time2 #Time difference of 48.24464 mins
-summary(Pass_BAS_full_DD_total_brm_ngb)
-save(Pass_BAS_full_DD_total_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngb.RData")
-#plot(Pass_BAS_full_DD_total_brm_ngb)
-
-#Model 10
-Pass_BAS_full_Declarin_FF_brm_ngb <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                        (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = negbinomial(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-summary(Pass_BAS_full_Declarin_FF_brm_ngb)
-save(Pass_BAS_full_Declarin_FF_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngb.RData")
-#plot(Pass_BAS_full_Declarin_FF_brm_ngb)
-
-
-
-#Zero inflated negative binomial implementation (porque no los dos?) - 
-#Model 11
-start_time3 <- Sys.time()
-Pass_BAS_full_DD_total_brm_ngbzif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                        (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = zero_inflated_negbinomial(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-end_time3 <- Sys.time()
-#end_time3 - start_time3 #Time difference of 1.362396 hours
-summary(Pass_BAS_full_DD_total_brm_ngbzif)
-save(Pass_BAS_full_DD_total_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
-#plot(Pass_BAS_full_DD_total_brm_ngbzif)
-
-#Model 12
-Pass_BAS_full_Declarin_FF_brm_ngbzif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
-                                        (1|FlightOrigin/FlightNumber),
-                        data   = Pass_BAS_dat_processed.mod, 
-                        family = zero_inflated_negbinomial(link = "log"),
-                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
-                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
-                        backend = "cmdstanr", threads = threading(4))
-summary(Pass_BAS_full_Declarin_FF_brm_ngbzif)
-save(Pass_BAS_full_Declarin_FF_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
-#plot(Pass_BAS_full_Declarin_FF_brm_ngbzif)
+#
+#
+#
+##Brms implementation (zero inflation sensitivity) - 
+##Model 7
+#Pass_BAS_full_DD_total_brm_zif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                        (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = zero_inflated_poisson(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#summary(Pass_BAS_full_DD_total_brm_zif)
+#save(Pass_BAS_full_DD_total_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_zif.RData")
+##plot(Pass_BAS_full_DD_total_brm_zif)
+#
+##Model 8
+#Pass_BAS_full_Declarin_FF_brm_zif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                          (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = zero_inflated_poisson(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#summary(Pass_BAS_full_Declarin_FF_brm_zif)
+#save(Pass_BAS_full_Declarin_FF_brm_zif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_zif.RData")
+##plot(Pass_BAS_full_Declarin_FF_brm_zif)
+#
+#
+#
+##Negative binomial implementation (overdispersion sensitivity) - 
+##Model 9
+#start_time2 <- Sys.time()
+#Pass_BAS_full_DD_total_brm_ngb <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                        (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = negbinomial(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#end_time2 <- Sys.time()
+##end_time2 - start_time2 #Time difference of 48.24464 mins
+#summary(Pass_BAS_full_DD_total_brm_ngb)
+#save(Pass_BAS_full_DD_total_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngb.RData")
+##plot(Pass_BAS_full_DD_total_brm_ngb)
+#
+##Model 10
+#Pass_BAS_full_Declarin_FF_brm_ngb <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                        (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = negbinomial(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#summary(Pass_BAS_full_Declarin_FF_brm_ngb)
+#save(Pass_BAS_full_Declarin_FF_brm_ngb, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngb.RData")
+##plot(Pass_BAS_full_Declarin_FF_brm_ngb)
+#
+#
+#
+##Zero inflated negative binomial implementation (porque no los dos?) - 
+##Model 11
+#start_time3 <- Sys.time()
+#Pass_BAS_full_DD_total_brm_ngbzif <- brm(N_Total ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                        (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = zero_inflated_negbinomial(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#end_time3 <- Sys.time()
+##end_time3 - start_time3 #Time difference of 1.362396 hours
+#summary(Pass_BAS_full_DD_total_brm_ngbzif)
+#save(Pass_BAS_full_DD_total_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.RData")
+##plot(Pass_BAS_full_DD_total_brm_ngbzif)
+#
+##Model 12
+#Pass_BAS_full_Declarin_FF_brm_ngbzif <- brm(N_Declarations_FF ~ 1 + Location + Regime + sqrt.BagSearchCount.Z + sqrt.PassengerCount.Z + 
+#                                        (1|FlightOrigin/FlightNumber),
+#                        data   = Pass_BAS_dat_processed.mod, 
+#                        family = zero_inflated_negbinomial(link = "log"),
+#                        control = list(adapt_delta = adapt_delta_value, max_treedepth = max_treedepth_value),
+#                        chains = 3, cores = 3, iter = iterations, warmup = burnin, thin = thinning,
+#                        backend = "cmdstanr", threads = threading(4))
+#summary(Pass_BAS_full_Declarin_FF_brm_ngbzif)
+#save(Pass_BAS_full_Declarin_FF_brm_ngbzif, file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
+##plot(Pass_BAS_full_Declarin_FF_brm_ngbzif)
 
 
 
@@ -248,13 +248,6 @@ load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_DD_total_brm_ngbzif.R
 load(file = "~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_brm_ngbzif.RData")
 
 
-#r2_nakagawa(Pass_BAS_full_DD_total_glm) # Conditional R2: 0.570, Marginal R2: 0.543
-#r2_bayes(Pass_BAS_full_DD_total_brm) # Conditional R2: 0.312 (95% CI [0.306, 0.318]) Marginal R2: 0.266 (95% CI [0.222, 0.307])
-#r2_bayes(Pass_BAS_full_DD_total_brm_zif) # Conditional R2: 0.281 (95% CI [0.274, 0.288]) Marginal R2: 0.243 (95% CI [0.205, 0.282])
-#r2_bayes(Pass_BAS_full_DD_total_brm_ngb) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.499, 0.500])
-#bayes_R2(Pass_BAS_full_DD_total_brm_ngbzif) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.500, 0.500])
-
-
 
 #### 2A. N_Total model comparison: Regime ####
 Regi_ems1 <- emmeans(Pass_BAS_full_DD_total_glm, ~Regime)
@@ -276,10 +269,10 @@ Regi_ems4 <- as.data.frame(Regi_ems4)
 Regi_ems5 <- as.data.frame(Regi_ems5) 
 
 Regi_ems1$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
-Regi_ems2$Regime <- ""
-Regi_ems3$Regime <- ""
-Regi_ems4$Regime <- ""
-Regi_ems5$Regime <- ""
+Regi_ems2$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems3$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems4$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems5$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 
 Regi_ems1$Model <- "Poisson_glm" 
 Regi_ems2$Model <- "Poisson_brm" 
@@ -287,11 +280,17 @@ Regi_ems3$Model <- "Poisson_Zinf_brm"
 Regi_ems4$Model <- "Negbin_brm" 
 Regi_ems5$Model <- "Negbin_Zinf_brm" 
 
-Regi_ems1$Position <- c(1:5)
-Regi_ems2$Position <- Regi_ems1$Position - 0.17
-Regi_ems3$Position <- Regi_ems1$Position - 0.34
-Regi_ems4$Position <- Regi_ems1$Position - 0.51
-Regi_ems5$Position <- Regi_ems1$Position - 0.68
+#Regi_ems1$Position <- c(1:5)
+#Regi_ems2$Position <- Regi_ems1$Position - 0.17
+#Regi_ems3$Position <- Regi_ems1$Position - 0.34
+#Regi_ems4$Position <- Regi_ems1$Position - 0.51
+#Regi_ems5$Position <- Regi_ems1$Position - 0.68
+
+Regi_ems1$Position <- c(23:27)
+Regi_ems2$Position <- c(17.5:21.5)
+Regi_ems3$Position <- c(12:16)
+Regi_ems4$Position <- c(6.5:10.5)
+Regi_ems5$Position <- c(1:5)
 
 Regi_ems1 <- Regi_ems1[,-c(3,4)]
 colnames(Regi_ems1) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
@@ -313,9 +312,9 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
-  scale_y_continuous(limits = c(0.1, 5.3), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.85,0.15),
+  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.875,0.20),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
         legend.text = element_text(size = 7.5, colour = "black", face = 'italic'), 
@@ -330,13 +329,13 @@ Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
   geom_point(aes(color = Model), shape = 19, size = 2) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "right", x =-0.05, vjust=0.25, size = 2.5) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total BRM interceptions/flight by regime",
        y = "") 
 Fig_Sens_A
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 16, height = 14, units = "cm", Fig_Sens_A, dpi = 600)
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 18, height = 12, units = "cm", Fig_Sens_A, dpi = 600)
 
 
 
@@ -442,10 +441,10 @@ Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_x_continuous(limits = c(-0.45, 0.45), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
   scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  theme(legend.position = c(0.8,0.12),
+  theme(legend.position = c(0.825,0.125),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 6, colour = "black", face = 'italic'), 
+        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
         legend.key.size = unit(0.8,"line"),
         legend.background = element_blank(),
         axis.ticks.y = element_blank(), 
@@ -462,7 +461,7 @@ Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
        y = "")
 Fig_Sens_B
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 8, height = 12, units = "cm", Fig_Sens_B, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 9, height = 11, units = "cm", Fig_Sens_B, dpi = 600)
 
 
 
@@ -487,10 +486,10 @@ Regi_ems4 <- as.data.frame(Regi_ems4)
 Regi_ems5 <- as.data.frame(Regi_ems5) 
 
 Regi_ems1$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
-Regi_ems2$Regime <- ""
-Regi_ems3$Regime <- ""
-Regi_ems4$Regime <- ""
-Regi_ems5$Regime <- ""
+Regi_ems2$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems3$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems4$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
+Regi_ems5$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 
 Regi_ems1$Model <- "Poisson_glm" 
 Regi_ems2$Model <- "Poisson_brm" 
@@ -498,11 +497,17 @@ Regi_ems3$Model <- "Poisson_Zinf_brm"
 Regi_ems4$Model <- "Negbin_brm" 
 Regi_ems5$Model <- "Negbin_Zinf_brm" 
 
-Regi_ems1$Position <- c(1:5)
-Regi_ems2$Position <- Regi_ems1$Position - 0.17
-Regi_ems3$Position <- Regi_ems1$Position - 0.34
-Regi_ems4$Position <- Regi_ems1$Position - 0.51
-Regi_ems5$Position <- Regi_ems1$Position - 0.68
+#Regi_ems1$Position <- c(1:5)
+#Regi_ems2$Position <- Regi_ems1$Position - 0.17
+#Regi_ems3$Position <- Regi_ems1$Position - 0.34
+#Regi_ems4$Position <- Regi_ems1$Position - 0.51
+#Regi_ems5$Position <- Regi_ems1$Position - 0.68
+
+Regi_ems1$Position <- c(23:27)
+Regi_ems2$Position <- c(17.5:21.5)
+Regi_ems3$Position <- c(12:16)
+Regi_ems4$Position <- c(6.5:10.5)
+Regi_ems5$Position <- c(1:5)
 
 Regi_ems1 <- Regi_ems1[,-c(3,4)]
 colnames(Regi_ems1) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
@@ -524,9 +529,9 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.8, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
-  scale_y_continuous(limits = c(0.1, 5.3), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.85,0.15),
+  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
+  theme(legend.position = c(0.875,0.20),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
         legend.text = element_text(size = 7.5, colour = "black", face = 'italic'), 
@@ -541,13 +546,13 @@ Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
   geom_point(aes(color = Model), shape = 19, size = 2) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "right", x =-0.05, vjust=0.25, size = 2.5) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total FF host declarations/flight by regime",
        y = "") 
 Fig_Sens_C
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_C.png", width = 16, height = 14, units = "cm", Fig_Sens_C, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_C.png", width = 18, height = 12, units = "cm", Fig_Sens_C, dpi = 600)
 
 
 
@@ -654,10 +659,10 @@ Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_x_continuous(limits = c(-1, 1), expand = c(0, 0), breaks=c(-0.5, 0.0, 0.5)) +
   scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  theme(legend.position = c(0.8,0.12),
+  theme(legend.position = c(0.825,0.125),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 6, colour = "black", face = 'italic'), 
+        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
         legend.key.size = unit(0.8,"line"),
         legend.background = element_blank(),
         axis.ticks.y = element_blank(), 
@@ -674,19 +679,35 @@ Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
        y = "")
 Fig_Sens_D
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 8, height = 12, units = "cm", Fig_Sens_D, dpi = 600)
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 9, height = 11, units = "cm", Fig_Sens_D, dpi = 600)
 
 
 
 
-
-#### 4.Overdispersion/zinf checks ####
+#### 4. Overdispersion/zinf checks ####
 
 check_zeroinflation(Pass_BAS_full_DD_total_glm)
 check_overdispersion(Pass_BAS_full_DD_total_glm)
 
 check_zeroinflation(Pass_BAS_full_Declarin_FF_glm)
 check_overdispersion(Pass_BAS_full_Declarin_FF_glm)
+
+
+
+#### 5. Model fitting checks ####
+#https://easystats.github.io/performance/
+  
+#AIC(Pass_BAS_full_DD_total_glm)
+#WAIC(Pass_BAS_full_DD_total_brm)
+#WAIC(Pass_BAS_full_DD_total_brm_zif)
+
+
+
+#r2_nakagawa(Pass_BAS_full_DD_total_glm) # Conditional R2: 0.570, Marginal R2: 0.543
+#r2_bayes(Pass_BAS_full_DD_total_brm) # Conditional R2: 0.312 (95% CI [0.306, 0.318]) Marginal R2: 0.266 (95% CI [0.222, 0.307])
+#r2_bayes(Pass_BAS_full_DD_total_brm_zif) # Conditional R2: 0.281 (95% CI [0.274, 0.288]) Marginal R2: 0.243 (95% CI [0.205, 0.282])
+#r2_bayes(Pass_BAS_full_DD_total_brm_ngb) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.499, 0.500])
+#r2_bayes(Pass_BAS_full_DD_total_brm_ngbzif) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.500, 0.500])
 
 
 
