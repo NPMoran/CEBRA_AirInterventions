@@ -373,9 +373,9 @@ Eff_Bag$Effect_percent <- paste(Eff_Bag$Effect_percent, "%]", sep = "")
 
 Eff_Bag <- Eff_Bag[,c(4,8)]
 
-#knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
+knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
 
-
+Table1 <- Eff_Bag
 
 
 #### 2C. N_Total model comparison: Flight Origins ####
@@ -591,9 +591,9 @@ Eff_Bag$Effect_percent <- paste(Eff_Bag$Effect_percent, "%]", sep = "")
 
 Eff_Bag <- Eff_Bag[,c(4,8)]
 
-#knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
+knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
 
-
+Table1 <- merge(Table1, Eff_Bag, by = "Model", all.x= TRUE)
 
 
 #### 3B. N_Declarations_FF model comparison: Flight Origins ####
@@ -689,7 +689,7 @@ ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width =
 check_zeroinflation(Pass_BAS_full_DD_total_glm)
 check_overdispersion(Pass_BAS_full_DD_total_glm)
 
-check_zeroinflation(Pass_BAS_full_Declarin_FF_glm)
+check_zeroinflation(Pass_BAS_full_ _glm)
 check_overdispersion(Pass_BAS_full_Declarin_FF_glm)
 
 
@@ -697,11 +697,57 @@ check_overdispersion(Pass_BAS_full_Declarin_FF_glm)
 #### 5. Model fitting checks ####
 #https://easystats.github.io/performance/
   
-#AIC(Pass_BAS_full_DD_total_glm)
-#WAIC(Pass_BAS_full_DD_total_brm)
-#WAIC(Pass_BAS_full_DD_total_brm_zif)
+perf_DD_total_glm <-model_performance(Pass_BAS_full_DD_total_glm)
+perf_DD_total_brm <-model_performance(Pass_BAS_full_DD_total_brm)
+perf_DD_total_brm_zif <-model_performance(Pass_BAS_full_DD_total_brm_zif)
+perf_DD_total_brm_ngb <-model_performance(Pass_BAS_full_DD_total_brm_ngb)
+perf_DD_total_brm_ngbzif <-model_performance(Pass_BAS_full_DD_total_brm_ngbzif)
 
+perf_Declarin_FF_glm <-model_performance(Pass_BAS_full_Declarin_FF_glm)
+perf_Declarin_FF_brm <-model_performance(Pass_BAS_full_Declarin_FF_brm)
+perf_Declarin_FF_brm_zif <-model_performance(Pass_BAS_full_Declarin_FF_brm_zif)
+perf_Declarin_FF_brm_ngb <-model_performance(Pass_BAS_full_Declarin_FF_brm_ngb)
+perf_Declarin_FF_brm_ngbzif <-model_performance(Pass_BAS_full_Declarin_FF_brm_ngbzif)
 
+perf_DD_total_glm <- as.data.frame(perf_DD_total_glm)
+perf_DD_total_brm <- as.data.frame(perf_DD_total_brm)
+perf_DD_total_brm_zif <- as.data.frame(perf_DD_total_brm_zif)
+perf_DD_total_brm_ngb <- as.data.frame(perf_DD_total_brm_ngb)
+perf_DD_total_brm_ngbzif <- as.data.frame(perf_DD_total_brm_ngbzif)
+perf_Declarin_FF_glm <- as.data.frame(perf_Declarin_FF_glm)
+perf_Declarin_FF_brm <- as.data.frame(perf_Declarin_FF_brm)
+perf_Declarin_FF_brm_zif <- as.data.frame(perf_Declarin_FF_brm_zif)
+perf_Declarin_FF_brm_ngb <- as.data.frame(perf_Declarin_FF_brm_ngb)
+perf_Declarin_FF_brm_ngbzif <- as.data.frame(perf_Declarin_FF_brm_ngbzif)
+
+labels(perf_DD_total_glm)
+labels(perf_DD_total_brm)
+labels(perf_DD_total_brm_zif)
+labels(perf_DD_total_brm_ngb)
+labels(perf_DD_total_brm_ngbzif)
+
+perf_DD_total_brm_zif$Score_log <- ""
+perf_DD_total_brm_ngb$Score_log <- ""
+perf_DD_total_brm_ngbzif$Score_log <- ""
+perf_Declarin_FF_brm_zif$Score_log <- ""
+perf_Declarin_FF_brm_ngb$Score_log <- ""
+perf_Declarin_FF_brm_ngbzif$Score_log <- ""
+perf_DD_total_brm_zif$Score_spherical <- ""
+perf_DD_total_brm_ngb$Score_spherical <- ""
+perf_DD_total_brm_ngbzif$Score_spherical <- ""
+perf_Declarin_FF_brm_zif$Score_spherical <- ""
+perf_Declarin_FF_brm_ngb$Score_spherical <- ""
+perf_Declarin_FF_brm_ngbzif$Score_spherical <- ""
+
+mod_performance_glm <- rbind(perf_DD_total_glm, perf_Declarin_FF_glm)
+rownames(mod_performance_glm) <- c("Pass_BAS_full_DD_total_glm","Pass_BAS_full_Declarin_FF_glm")
+mod_performance_brm <- rbind(perf_DD_total_brm, perf_DD_total_brm_zif, perf_DD_total_brm_ngb, perf_DD_total_brm_ngbzif,
+                             perf_Declarin_FF_brm, perf_Declarin_FF_brm_zif, perf_Declarin_FF_brm_ngb, perf_Declarin_FF_brm_ngbzif)
+rownames(mod_performance_brm) <- c("Pass_BAS_full_DD_total_brm", "Pass_BAS_full_DD_total_brm_zif", "Pass_BAS_full_DD_total_brm_ngb", "Pass_BAS_full_DD_total_brm_ngbzif",
+"Pass_BAS_full_Declarin_FF_brm", "Pass_BAS_full_Declarin_FF_brm_zif", "Pass_BAS_full_Declarin_FF_brm_ngb", "Pass_BAS_full_Declarin_FF_brm_ngbzif")
+
+#write.csv(mod_performance_glm, "~/CEBRA_AirInterventions/outputs_visualisations/mod_performance_glm.csv")  
+#write.csv(mod_performance_brm, "~/CEBRA_AirInterventions/outputs_visualisations/mod_performance_brm.csv")                                                                      
 
 #r2_nakagawa(Pass_BAS_full_DD_total_glm) # Conditional R2: 0.570, Marginal R2: 0.543
 #r2_bayes(Pass_BAS_full_DD_total_brm) # Conditional R2: 0.312 (95% CI [0.306, 0.318]) Marginal R2: 0.266 (95% CI [0.222, 0.307])
