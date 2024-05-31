@@ -958,7 +958,268 @@ Fig_Air_Numb_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FN, aes(x = condval, y =
   annotate("text", x = 0.55, y = 0.65, size = 2.4, label = "italic(N_Detected_FF)", parse = TRUE)
 Fig_Air_Numb_B3
 
+
 #ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Numb_B3.png", width = 6, height = 24, units = "cm", Fig_Air_Numb_B3, dpi = 600)
+
+
+
+#### 3A. Table: Model descriptions and fit checks ####
+
+
+perf_DD_total_glm <-model_performance(Pass_BAS_full_DD_total_glm)
+perf_Declarin_glm <-model_performance(Pass_BAS_full_Declarin_glm)
+perf_Detectin_glm <-model_performance(Pass_BAS_full_Detectin_glm)
+
+perf_DD_total_FF_glm <-model_performance(Pass_BAS_full_DD_total_FF_glm)
+perf_Declarin_FF_glm <-model_performance(Pass_BAS_full_Declarin_FF_glm)
+perf_Detectin_FF_glm <-model_performance(Pass_BAS_full_Detectin_FF_glm)
+
+mod_performance_glm <- rbind(perf_DD_total_glm, perf_Declarin_glm, perf_Detectin_glm,
+                             perf_DD_total_FF_glm, perf_Declarin_FF_glm, perf_Detectin_FF_glm)
+
+rownames(mod_performance_glm) <- c("Pass_BAS_full_DD_total_glm","Pass_BAS_full_Declarin_glm", "Pass_BAS_full_Detectin_glm",
+                                   "Pass_BAS_full_DD_total_FF_glm", "Pass_BAS_full_Declarin_FF_glm", "Pass_BAS_full_Detectin_FF_glm")
+
+#write.csv(mod_performance_glm, "~/CEBRA_AirInterventions/outputs_visualisations/mod_performance_glm.csv")  
+
+
+
+#r2_nakagawa(Pass_BAS_full_DD_total_glm)
+#r2_nakagawa(Pass_BAS_full_Declarin_glm)
+#r2_nakagawa(Pass_BAS_full_Detectin_glm)
+#r2_nakagawa(Pass_BAS_full_DD_total_FF_glm)
+#r2_nakagawa(Pass_BAS_full_Declarin_FF_glm)
+#r2_nakagawa(Pass_BAS_full_Detectin_FF_glm)
+deviance(Pass_BAS_full_DD_total_glm)
+
+
+
+
+
+#### 3B. Tables: Model summary ####
+
+table1a <- as.data.frame(summary(Pass_BAS_full_DD_total_glm)$coefficients)
+table1b <- as.data.frame(summary(Pass_BAS_full_Declarin_glm)$coefficients)
+table1c <- as.data.frame(summary(Pass_BAS_full_Detectin_glm)$coefficients)
+
+table1a$Estimate <- format(round(table1a$Estimate, digits = 3), nsmall = 3)
+table1b$Estimate <- format(round(table1b$Estimate, digits = 3), nsmall = 3)
+table1c$Estimate <- format(round(table1c$Estimate, digits = 3), nsmall = 3)
+table1a$`Std. Error` <- format(round(table1a$`Std. Error`, digits = 3), nsmall = 3)
+table1b$`Std. Error` <- format(round(table1b$`Std. Error`, digits = 3), nsmall = 3)
+table1c$`Std. Error` <- format(round(table1c$`Std. Error`, digits = 3), nsmall = 3)
+table1a$`z value` <- format(round(table1a$`z value`, digits = 3), nsmall = 3)
+table1b$`z value` <- format(round(table1b$`z value`, digits = 3), nsmall = 3)
+table1c$`z value` <- format(round(table1c$`z value`, digits = 3), nsmall = 3)
+
+table1a$P <- case_when(table1a$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table1a$`Pr(>|z|)` <- as.character(format(round(table1a$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table1a$`Pr(>|z|)` <- case_when(table1a$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table1a$`Pr(>|z|)`)
+table1b$P <- case_when(table1b$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table1b$`Pr(>|z|)` <- as.character(format(round(table1b$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table1b$`Pr(>|z|)` <- case_when(table1b$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table1b$`Pr(>|z|)`)
+table1c$P <- case_when(table1c$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table1c$`Pr(>|z|)` <- as.character(format(round(table1c$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table1c$`Pr(>|z|)` <- case_when(table1c$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table1c$`Pr(>|z|)`)
+
+table1a$Model_param <- paste("  - ", rownames(table1a), sep = "")
+table1b$Model_param <- paste("  - ", rownames(table1b), sep = "")
+table1c$Model_param <- paste("  - ", rownames(table1c), sep = "")
+table1a <- table1a[,c(6,1,2,3,4)]
+table1b <- table1b[,c(6,1,2,3,4)]
+table1c <- table1c[,c(6,1,2,3,4)]
+
+table1a$Var <- ""
+table1b$Var <- ""
+table1c$Var <- ""
+
+colnames(table1a) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+colnames(table1b) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+colnames(table1c) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+
+table1d <- as.data.frame(summary(Pass_BAS_full_DD_total_glm)$varcor)
+table1e <- as.data.frame(summary(Pass_BAS_full_Declarin_glm)$varcor)
+table1f <- as.data.frame(summary(Pass_BAS_full_Detectin_glm)$varcor)
+
+table1d$fill <- ""
+table1e$fill <- ""
+table1f$fill <- ""
+
+table1d[,c(2,3,5)] <- ""
+table1e[,c(2,3,5)] <- ""
+table1f[,c(2,3,5)] <- ""
+
+table1d <- table1d[,c(1,2,3,5,6,4)] 
+table1e <- table1e[,c(1,2,3,5,6,4)] 
+table1f <- table1f[,c(1,2,3,5,6,4)] 
+
+colnames(table1d) <- colnames(table1a)
+colnames(table1e) <- colnames(table1b)
+colnames(table1f) <- colnames(table1c)
+
+table1d$Model_param <- paste("  (1|", table1d$Model_param, sep = "")
+table1e$Model_param <- paste("  (1|", table1e$Model_param, sep = "")
+table1f$Model_param <- paste("  (1|", table1f$Model_param, sep = "")
+
+table1d$Model_param <- paste(table1d$Model_param, ")", sep = "")
+table1e$Model_param <- paste(table1e$Model_param, ")", sep = "")
+table1f$Model_param <- paste(table1f$Model_param, ")", sep = "")
+
+table1d$Var <- format(round(table1d$Var, digits = 3), nsmall = 3)
+table1e$Var <- format(round(table1e$Var, digits = 3), nsmall = 3)
+table1f$Var <- format(round(table1f$Var, digits = 3), nsmall = 3)
+
+table1g <- NULL
+table1g$Model_param <- "Model: N_Total"
+table1g <- as.data.frame(table1g)
+table1g$Estimate <- ""
+table1g$`S.E.` <- ""
+table1g$z <- ""
+table1g$P <- ""
+table1g$Var <- ""
+
+table1h <- NULL
+table1h$Model_param <- "Model: N_Declarations"
+table1h <- as.data.frame(table1h)
+table1h$Estimate <- ""
+table1h$`S.E.` <- ""
+table1h$z <- ""
+table1h$P <- ""
+table1h$Var <- ""
+
+table1i <- NULL
+table1i$Model_param <- "Model: N_Detections"
+table1i <- as.data.frame(table1i)
+table1i$Estimate <- ""
+table1i$`S.E.` <- ""
+table1i$z <- ""
+table1i$P <- ""
+table1i$Var <- ""
+
+table1 <- rbind(table1g, table1d, table1a, 
+                table1h, table1e, table1b,
+                table1i, table1f, table1c)
+
+
+print(xtable(table1, 
+    caption = c("Glm, fixed effect estimates and random effect variance components for BRM interception models (total, declared and detected)."), 
+    label = "table_suppmainmods", align = c("l","l","c","c","c","c","c")), include.rownames=FALSE, caption.placement = "top")
+
+
+
+table2a <- as.data.frame(summary(Pass_BAS_full_DD_total_FF_glm)$coefficients)
+table2b <- as.data.frame(summary(Pass_BAS_full_Declarin_FF_glm)$coefficients)
+table2c <- as.data.frame(summary(Pass_BAS_full_Detectin_FF_glm)$coefficients)
+
+table2a$Estimate <- format(round(table2a$Estimate, digits = 3), nsmall = 3)
+table2b$Estimate <- format(round(table2b$Estimate, digits = 3), nsmall = 3)
+table2c$Estimate <- format(round(table2c$Estimate, digits = 3), nsmall = 3)
+table2a$`Std. Error` <- format(round(table2a$`Std. Error`, digits = 3), nsmall = 3)
+table2b$`Std. Error` <- format(round(table2b$`Std. Error`, digits = 3), nsmall = 3)
+table2c$`Std. Error` <- format(round(table2c$`Std. Error`, digits = 3), nsmall = 3)
+table2a$`z value` <- format(round(table2a$`z value`, digits = 3), nsmall = 3)
+table2b$`z value` <- format(round(table2b$`z value`, digits = 3), nsmall = 3)
+table2c$`z value` <- format(round(table2c$`z value`, digits = 3), nsmall = 3)
+
+table2a$P <- case_when(table2a$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table2a$`Pr(>|z|)` <- as.character(format(round(table2a$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table2a$`Pr(>|z|)` <- case_when(table2a$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table2a$`Pr(>|z|)`)
+table2b$P <- case_when(table2b$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table2b$`Pr(>|z|)` <- as.character(format(round(table2b$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table2b$`Pr(>|z|)` <- case_when(table2b$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table2b$`Pr(>|z|)`)
+table2c$P <- case_when(table2c$`Pr(>|z|)` < 0.001 ~ "P < 0.001")
+table2c$`Pr(>|z|)` <- as.character(format(round(table2c$`Pr(>|z|)`, digits = 3), nsmall = 3))
+table2c$`Pr(>|z|)` <- case_when(table2c$`Pr(>|z|)` == "0.000" ~ "P < 0.001",
+                                .default = table2c$`Pr(>|z|)`)
+
+table2a$Model_param <- paste("  - ", rownames(table2a), sep = "")
+table2b$Model_param <- paste("  - ", rownames(table2b), sep = "")
+table2c$Model_param <- paste("  - ", rownames(table2c), sep = "")
+table2a <- table2a[,c(6,1,2,3,4)]
+table2b <- table2b[,c(6,1,2,3,4)]
+table2c <- table2c[,c(6,1,2,3,4)]
+
+table2a$Var <- ""
+table2b$Var <- ""
+table2c$Var <- ""
+
+colnames(table2a) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+colnames(table2b) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+colnames(table2c) <- c("Model_param", "Estimate", "S.E.", "z", "P", "Var")
+
+table2d <- as.data.frame(summary(Pass_BAS_full_DD_total_FF_glm)$varcor)
+table2e <- as.data.frame(summary(Pass_BAS_full_Declarin_FF_glm)$varcor)
+table2f <- as.data.frame(summary(Pass_BAS_full_Detectin_FF_glm)$varcor)
+
+table2d$fill <- ""
+table2e$fill <- ""
+table2f$fill <- ""
+
+table2d[,c(2,3,5)] <- ""
+table2e[,c(2,3,5)] <- ""
+table2f[,c(2,3,5)] <- ""
+
+table2d <- table2d[,c(1,2,3,5,6,4)] 
+table2e <- table2e[,c(1,2,3,5,6,4)] 
+table2f <- table2f[,c(1,2,3,5,6,4)] 
+
+colnames(table2d) <- colnames(table2a)
+colnames(table2e) <- colnames(table2b)
+colnames(table2f) <- colnames(table2c)
+
+table2d$Model_param <- paste("  (1|", table2d$Model_param, sep = "")
+table2e$Model_param <- paste("  (1|", table2e$Model_param, sep = "")
+table2f$Model_param <- paste("  (1|", table2f$Model_param, sep = "")
+
+table2d$Model_param <- paste(table2d$Model_param, ")", sep = "")
+table2e$Model_param <- paste(table2e$Model_param, ")", sep = "")
+table2f$Model_param <- paste(table2f$Model_param, ")", sep = "")
+
+table2d$Var <- format(round(table2d$Var, digits = 3), nsmall = 3)
+table2e$Var <- format(round(table2e$Var, digits = 3), nsmall = 3)
+table2f$Var <- format(round(table2f$Var, digits = 3), nsmall = 3)
+
+table2g <- NULL
+table2g$Model_param <- "Model: N_Total_FF"
+table2g <- as.data.frame(table2g)
+table2g$Estimate <- ""
+table2g$`S.E.` <- ""
+table2g$z <- ""
+table2g$P <- ""
+table2g$Var <- ""
+
+table2h <- NULL
+table2h$Model_param <- "Model: N_Declarations_FF"
+table2h <- as.data.frame(table2h)
+table2h$Estimate <- ""
+table2h$`S.E.` <- ""
+table2h$z <- ""
+table2h$P <- ""
+table2h$Var <- ""
+
+table2i <- NULL
+table2i$Model_param <- "Model: N_Detections_FF"
+table2i <- as.data.frame(table2i)
+table2i$Estimate <- ""
+table2i$`S.E.` <- ""
+table2i$z <- ""
+table2i$P <- ""
+table2i$Var <- ""
+
+table2 <- rbind(table2g, table2d, table2a, 
+                table2h, table2e, table2b,
+                table2i, table2f, table2c)
+
+
+print(xtable(table2, 
+             caption = c("Glm, fixed effect estimates and random effect variance components for FF host interception models (total, declared and detected)."), 
+             label = "table_suppmainmods2", align = c("l","l","c","c","c","c","c")), include.rownames=FALSE, caption.placement = "top")
+
 
 
 

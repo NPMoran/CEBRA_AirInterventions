@@ -1,0 +1,15 @@
+Model_ID,Variable,Implementation,AIC/WAIC,R2_conditional,R2_marginal
+Pass_BAS_full_DD_total_glm,N_Total,Poisson (lme4),158303.1,0.570,0.543
+Pass_BAS_full_Declarin_glm,N_Declarations,Poisson (lme4),97483.3,0.413,0.311
+Pass_BAS_full_Detectin_glm,N_Detections,Poisson (lme4),123283.8,0.647,0.625
+Pass_BAS_full_DD_total_FF_glm,N_Total_FF,Poisson (lme4),129489.8,0.532,0.498
+Pass_BAS_full_Declarin_FF_glm,N_Declarations_FF,Poisson (lme4),82983.4,0.422,0.330
+Pass_BAS_full_Detectin_FF_glm,N_Detections_FF,Poisson (lme4),92586.8,0.574,0.543
+Pass_BAS_full_DD_total_brm,N_Total,Poisson (brms),158191.0,0.312,0.266
+Pass_BAS_full_DD_total_brm_zif,N_Total,zero-inf. Poisson (brms),155249.0,0.281,0.241
+Pass_BAS_full_DD_total_brm_ngb,N_Total,neg. binomial (brms),149504.2,0.500,0.500
+Pass_BAS_full_DD_total_brm_ngbzif,N_Total,zero-inf. neg. binomial (brms),149292.8,0.500,0.500
+Pass_BAS_full_Declarin_FF_brm,N_Declarations_FF,Poisson (brms),82841.5,0.138,0.105
+Pass_BAS_full_Declarin_FF_brm_zif,N_Declarations_FF,zero-inf. Poisson (brms),75671.2,0.094,0.076
+Pass_BAS_full_Declarin_FF_brm_ngb,N_Declarations_FF,neg. binomial (brms),74270.3,0.493,0.493
+Pass_BAS_full_Declarin_FF_brm_ngbzif,N_Declarations_FF,zero-inf. neg. binomial (brms),74191.7,0.496,0.496
