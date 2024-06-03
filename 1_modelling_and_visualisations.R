@@ -621,7 +621,7 @@ Fig_Air_Orig_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FO, aes(x = condval, y = Po
   annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total)", parse = TRUE)
 Fig_Air_Orig_A1
 
-ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A1.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A1, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Orig_A1.png", width = 6, height = 5, units = "cm", Fig_Air_Orig_A1, dpi = 600)
 
 
 Pass_BAS_full_Declarin_glm.FO <- subset(Pass_BAS_full_Declarin_glm.ranef, grpvar == "FlightOrigin")

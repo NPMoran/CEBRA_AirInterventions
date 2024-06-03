@@ -274,11 +274,11 @@ Regi_ems3$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "T
 Regi_ems4$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 Regi_ems5$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 
-Regi_ems1$Model <- "Poisson_glm" 
-Regi_ems2$Model <- "Poisson_brm" 
-Regi_ems3$Model <- "Poisson_Zinf_brm" 
-Regi_ems4$Model <- "Negbin_brm" 
-Regi_ems5$Model <- "Negbin_Zinf_brm" 
+Regi_ems1$Model <- "Poisson (lme4)" 
+Regi_ems2$Model <- "Poisson (brms)" 
+Regi_ems3$Model <- "zero-inf. Poisson (brms)" 
+Regi_ems4$Model <- "neg. binomial (brms)" 
+Regi_ems5$Model <- "zero-inf. neg. binomial (brms)" 
 
 #Regi_ems1$Position <- c(1:5)
 #Regi_ems2$Position <- Regi_ems1$Position - 0.17
@@ -300,7 +300,7 @@ colnames(Regi_ems4) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
 colnames(Regi_ems5) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
 
 Regi_emsA <- rbind(Regi_ems1,Regi_ems2,Regi_ems3,Regi_ems4,Regi_ems5)
-Regi_emsA$Model <- ordered(Regi_emsA$Model, levels = c("Poisson_glm", "Poisson_brm", "Poisson_Zinf_brm", "Negbin_brm", "Negbin_Zinf_brm"))
+Regi_emsA$Model <- ordered(Regi_emsA$Model, levels = c("Poisson (lme4)", "Poisson (brms)", "zero-inf. Poisson (brms)", "neg. binomial (brms)", "zero-inf. neg. binomial (brms)"))
 
 Regi_emsA$N_mean <- exp(Regi_emsA$emmean)
 Regi_emsA$N_lci <- exp(Regi_emsA$LCI)
@@ -312,15 +312,15 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.7, 2.1), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
   scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.875,0.20),
+  theme(legend.position = c(0.825,0.175),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 7.5, colour = "black", face = 'italic'), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
         legend.key.size = unit(1.2,"line"),
         axis.ticks.y = element_blank(), 
-        axis.text.x = element_text(size = 8, colour = "black"), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
         axis.line.x = element_line(colour = "black", size = 0.5),
         panel.background = element_rect(fill = "white"),
         axis.title.x  = element_text(size=9, vjust = 0.1),
@@ -329,13 +329,13 @@ Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
   geom_point(aes(color = Model), shape = 19, size = 2) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total BRM interceptions/flight by regime",
        y = "") 
 Fig_Sens_A
 
-ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 18, height = 12, units = "cm", Fig_Sens_A, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 18, height = 11.5, units = "cm", Fig_Sens_A, dpi = 600)
 
 
 
@@ -420,11 +420,11 @@ colnames(Pass_BAS_full_DD_total_brm.ranef_zif_FO) <- c("Group", "Intercept", "LC
 colnames(Pass_BAS_full_DD_total_brm.ranef_ngb_FO) <- c("Group", "Intercept", "LCI", "UCI", "Position")
 colnames(Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO) <- c("Group", "Intercept", "LCI", "UCI", "Position")
 
-Pass_BAS_full_DD_total_glm.FO$Model <- "Poisson_glm"
-Pass_BAS_full_DD_total_brm.ranef_FO$Model <- "Poisson_brm"
-Pass_BAS_full_DD_total_brm.ranef_zif_FO$Model <- "Poisson_Zinf_brm"
-Pass_BAS_full_DD_total_brm.ranef_ngb_FO$Model <- "Negbin_brm"
-Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Model <- "Negbin_Zinf_brm"
+Pass_BAS_full_DD_total_glm.FO$Model <- "Poisson (lme4)" 
+Pass_BAS_full_DD_total_brm.ranef_FO$Model <- "Poisson (brms)" 
+Pass_BAS_full_DD_total_brm.ranef_zif_FO$Model <- "zero-inf. Poisson (brms)" 
+Pass_BAS_full_DD_total_brm.ranef_ngb_FO$Model <- "neg. binomial (brms)" 
+Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Model <- "zero-inf. neg. binomial (brms)" 
 
 Pass_BAS_full_DD_total_brm.ranef_FO$Group <- ""
 Pass_BAS_full_DD_total_brm.ranef_zif_FO$Group <- ""
@@ -434,21 +434,21 @@ Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Group <- ""
 Orig_Sens_A <- rbind(Pass_BAS_full_DD_total_glm.FO, Pass_BAS_full_DD_total_brm.ranef_FO, 
                      Pass_BAS_full_DD_total_brm.ranef_zif_FO, Pass_BAS_full_DD_total_brm.ranef_ngb_FO, 
                      Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO)
-Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson_glm", "Poisson_brm", "Poisson_Zinf_brm", "Negbin_brm", "Negbin_Zinf_brm"))
+Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson (lme4)", "Poisson (brms)", "zero-inf. Poisson (brms)", "neg. binomial (brms)", "zero-inf. neg. binomial (brms)"))
 
 
 Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
-  scale_x_continuous(limits = c(-0.45, 0.45), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
+  scale_x_continuous(limits = c(-0.5, 0.5), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
   scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  theme(legend.position = c(0.825,0.125),
-        legend.title = element_blank(),
+  theme(legend.position = "none",
+#        legend.title = element_blank(),
+#        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
+#        legend.key.size = unit(0.8,"line"),
+#        legend.background = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
-        legend.key.size = unit(0.8,"line"),
-        legend.background = element_blank(),
         axis.ticks.y = element_blank(), 
-        axis.text.x = element_text(size = 8, colour = "black"), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
         axis.line.x = element_line(colour = "black", size = 0.5),
         panel.background = element_rect(fill = "white"),
         axis.title.x  = element_text(size=9, vjust = 0.1),
@@ -456,12 +456,12 @@ Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   geom_segment(aes(color = Model), x = Orig_Sens_A$LCI, y = Orig_Sens_A$Position, xend = Orig_Sens_A$UCI, yend = Orig_Sens_A$Position, size = 0.4) + 
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.435, vjust=0, size = 2.5) +
+  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.485, vjust=0, size = 2.5) +
   labs(x = "Est. total BRM interceptions/flight by flight origin",
        y = "")
 Fig_Sens_B
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 9, height = 11, units = "cm", Fig_Sens_B, dpi = 600)
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 8, height = 9, units = "cm", Fig_Sens_B, dpi = 600)
 
 
 
@@ -491,11 +491,11 @@ Regi_ems3$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "T
 Regi_ems4$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 Regi_ems5$Regime <- c("One BI:", "Two BIs:", "One DDT:", "One DDT & one BI:", "Two DDTs:")
 
-Regi_ems1$Model <- "Poisson_glm" 
-Regi_ems2$Model <- "Poisson_brm" 
-Regi_ems3$Model <- "Poisson_Zinf_brm" 
-Regi_ems4$Model <- "Negbin_brm" 
-Regi_ems5$Model <- "Negbin_Zinf_brm" 
+Regi_ems1$Model <- "Poisson (lme4)" 
+Regi_ems2$Model <- "Poisson (brms)" 
+Regi_ems3$Model <- "zero-inf. Poisson (brms)" 
+Regi_ems4$Model <- "neg. binomial (brms)" 
+Regi_ems5$Model <- "zero-inf. neg. binomial (brms)" 
 
 #Regi_ems1$Position <- c(1:5)
 #Regi_ems2$Position <- Regi_ems1$Position - 0.17
@@ -517,7 +517,7 @@ colnames(Regi_ems4) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
 colnames(Regi_ems5) <- c("Regime", "emmean", "LCI", "UCI", "Model", "Position")
 
 Regi_emsA <- rbind(Regi_ems1,Regi_ems2,Regi_ems3,Regi_ems4,Regi_ems5)
-Regi_emsA$Model <- ordered(Regi_emsA$Model, levels = c("Poisson_glm", "Poisson_brm", "Poisson_Zinf_brm", "Negbin_brm", "Negbin_Zinf_brm"))
+Regi_emsA$Model <- ordered(Regi_emsA$Model, levels = c("Poisson (lme4)", "Poisson (brms)", "zero-inf. Poisson (brms)", "neg. binomial (brms)", "zero-inf. neg. binomial (brms)"))
 
 Regi_emsA$N_mean <- exp(Regi_emsA$emmean)
 Regi_emsA$N_lci <- exp(Regi_emsA$LCI)
@@ -529,15 +529,15 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.7, 2.1), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
   scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
-  theme(legend.position = c(0.875,0.20),
+  theme(legend.position = c(0.825,0.175),
         legend.title = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 7.5, colour = "black", face = 'italic'), 
+        legend.text = element_text(size = 9, colour = "black", face = 'italic'), 
         legend.key.size = unit(1.2,"line"),
         axis.ticks.y = element_blank(), 
-        axis.text.x = element_text(size = 8, colour = "black"), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
         axis.line.x = element_line(colour = "black", size = 0.5),
         panel.background = element_rect(fill = "white"),
         axis.title.x  = element_text(size=9, vjust = 0.1),
@@ -546,13 +546,13 @@ Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
   geom_point(aes(color = Model), shape = 19, size = 2) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.25, size = 2.3) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total FF host declarations/flight by regime",
        y = "") 
 Fig_Sens_C
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_C.png", width = 18, height = 12, units = "cm", Fig_Sens_C, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_C.png", width = 18, height = 11.5, units = "cm", Fig_Sens_C, dpi = 600)
 
 
 
@@ -638,11 +638,11 @@ colnames(Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO) <- c("Group", "Intercept", 
 colnames(Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO) <- c("Group", "Intercept", "LCI", "UCI", "Position")
 colnames(Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO) <- c("Group", "Intercept", "LCI", "UCI", "Position")
 
-Pass_BAS_full_Declarin_FF_glm.FO$Model <- "Poisson_glm"
-Pass_BAS_full_Declarin_FF_brm.ranef_FO$Model <- "Poisson_brm"
-Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO$Model <- "Poisson_Zinf_brm"
-Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO$Model <- "Negbin_brm"
-Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Model <- "Negbin_Zinf_brm"
+Pass_BAS_full_Declarin_FF_glm.FO$Model <- "Poisson (lme4)" 
+Pass_BAS_full_Declarin_FF_brm.ranef_FO$Model <- "Poisson (brms)" 
+Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO$Model <- "zero-inf. Poisson (brms)" 
+Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO$Model <- "neg. binomial (brms)" 
+Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Model <- "zero-inf. neg. binomial (brms)" 
 
 Pass_BAS_full_Declarin_FF_brm.ranef_FO$Group <- ""
 Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO$Group <- ""
@@ -652,21 +652,21 @@ Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Group <- ""
 Orig_Sens_A <- rbind(Pass_BAS_full_Declarin_FF_glm.FO, Pass_BAS_full_Declarin_FF_brm.ranef_FO, 
                      Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO, Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO, 
                      Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO)
-Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson_glm", "Poisson_brm", "Poisson_Zinf_brm", "Negbin_brm", "Negbin_Zinf_brm"))
+Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson (lme4)", "Poisson (brms)", "zero-inf. Poisson (brms)", "neg. binomial (brms)", "zero-inf. neg. binomial (brms)"))
 
 
 Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_x_continuous(limits = c(-1, 1), expand = c(0, 0), breaks=c(-0.5, 0.0, 0.5)) +
   scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  theme(legend.position = c(0.825,0.125),
-        legend.title = element_blank(),
+  theme(legend.position = "none",
+        #        legend.title = element_blank(),
+        #        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
+        #        legend.key.size = unit(0.8,"line"),
+        #        legend.background = element_blank(),
         axis.text.y = element_blank(), 
-        legend.text = element_text(size = 7, colour = "black", face = 'italic'), 
-        legend.key.size = unit(0.8,"line"),
-        legend.background = element_blank(),
         axis.ticks.y = element_blank(), 
-        axis.text.x = element_text(size = 8, colour = "black"), 
+        axis.text.x = element_text(size = 7, colour = "black"), 
         axis.line.x = element_line(colour = "black", size = 0.5),
         panel.background = element_rect(fill = "white"),
         axis.title.x  = element_text(size=9, vjust = 0.1),
@@ -679,7 +679,7 @@ Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
        y = "")
 Fig_Sens_D
 
-ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 9, height = 11, units = "cm", Fig_Sens_D, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 8, height = 9, units = "cm", Fig_Sens_D, dpi = 600)
 
 
 
@@ -689,7 +689,7 @@ ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width =
 check_zeroinflation(Pass_BAS_full_DD_total_glm)
 check_overdispersion(Pass_BAS_full_DD_total_glm)
 
-check_zeroinflation(Pass_BAS_full_ _glm)
+check_zeroinflation(Pass_BAS_full_Declarin_FF_glm)
 check_overdispersion(Pass_BAS_full_Declarin_FF_glm)
 
 
@@ -747,7 +747,10 @@ rownames(mod_performance_brm) <- c("Pass_BAS_full_DD_total_brm", "Pass_BAS_full_
 #r2_bayes(Pass_BAS_full_DD_total_brm_zif) # Conditional R2: 0.281 (95% CI [0.274, 0.288]) Marginal R2: 0.243 (95% CI [0.205, 0.282])
 #r2_bayes(Pass_BAS_full_DD_total_brm_ngb) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.499, 0.500])
 #r2_bayes(Pass_BAS_full_DD_total_brm_ngbzif) # Conditional R2: 0.500 (95% CI [0.500, 0.500]) Marginal R2: 0.500 (95% CI [0.500, 0.500])
-
+bayes_R2(Pass_BAS_full_DD_total_brm)
+bayes_R2(Pass_BAS_full_DD_total_brm_zif)
+bayes_R2(Pass_BAS_full_DD_total_brm_ngb)
+bayes_R2(Pass_BAS_full_DD_total_brm_ngbzif)
 
 
 
