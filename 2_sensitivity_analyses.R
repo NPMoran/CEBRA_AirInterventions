@@ -457,8 +457,9 @@ Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_point(colour = 'black', shape = 19, size = 1) +
   geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.485, vjust=0, size = 2.5) +
-  labs(x = "Est. total BRM interceptions/flight by flight origin",
-       y = "")
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.375, y = 0.4, size = 2.75, label = "italic(N_Total)", parse = TRUE)
 Fig_Sens_B
 
 ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 8, height = 9, units = "cm", Fig_Sens_B, dpi = 600)
@@ -596,7 +597,7 @@ knitr::kable(Eff_Bag, "simple", align = "lc", row.names = FALSE)
 Table1 <- merge(Table1, Eff_Bag, by = "Model", all.x= TRUE)
 
 
-#### 3B. N_Declarations_FF model comparison: Flight Origins ####
+#### 3C. N_Declarations_FF model comparison: Flight Origins ####
 Pass_BAS_full_Declarin_FF_glm.ranef <- read.csv("~/CEBRA_AirInterventions/models/Pass_BAS_full_Declarin_FF_glm.ranef.csv")
 Pass_BAS_full_Declarin_FF_glm.FO <- subset(Pass_BAS_full_Declarin_FF_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_Declarin_FF_brm.ranef_FO <- as.data.frame(ranef(Pass_BAS_full_Declarin_FF_brm)$FlightOrigin)
@@ -675,8 +676,9 @@ Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_point(colour = 'black', shape = 19, size = 1) +
   geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.975, vjust=0, size = 2.5) +
-  labs(x = "Est. total FF host declarations/flight by flight origin",
-       y = "")
+  labs(x = "Intercept estimates by flight origin",
+       y = "") +
+  annotate("text", x = 0.575, y = 0.4, size = 2.75, label = "italic(N_Declarations_FF)", parse = TRUE)
 Fig_Sens_D
 
 #ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 8, height = 9, units = "cm", Fig_Sens_D, dpi = 600)
