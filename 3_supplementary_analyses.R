@@ -11,8 +11,51 @@ library(tidyverse); library(data.table); library(lubridate); library(xtable)
 library(lme4); library(lmerTest);  library(car); library(performance); library(emmeans)
 
 
+#### S.1. Preparing dataset for BN analyses ####
 
-#### S.1. BRM FF Host interception compositions ####
+#Preparing data set - 
+Pass_BAS_dat_processedAH <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_dat_processedAH_danon.csv')
+
+# - Removing flights with extremely extremely high passenger counts (n=26+5)
+#nrow(subset(Pass_BAS_dat_processedAH, PassengerCount >= 500))
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH, PassengerCount <= 500)
+
+# - Removing one entry with the bag search count missing and one over 1000. 
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, BagSearchCount != 'NA')
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, BagSearchCount <= 1000)
+
+# - Excluding Bridport, as low numbers caused issues estimating marginal means. 
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, Location != "Airport_G")
+
+# - Excluding 4 arrivals recorded as missed, but have some interception data (assumed data entry issues)
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, ActivityId != "2353216")
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, ActivityId != "3646084")
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, ActivityId != "8426879")
+Pass_BAS_dat_processedAH.mod <- subset(Pass_BAS_dat_processedAH.mod, ActivityId != "7292237")
+
+#Coding missed itinerant flights
+Pass_BAS_dat_processedAH.mod$FlightOrigin <- case_when(
+  Pass_BAS_dat_processedAH.mod$FlightNumber %in% c("FlightNo_NA") ~ "Itinerant/Other",
+  .default = Pass_BAS_dat_processedAH.mod$FlightOrigin
+)
+
+
+# - Final counts for summary data
+nrow(Pass_BAS_dat_processedAH) #66639
+sum(subset(Pass_BAS_dat_processedAH, !(N_Total_FF %in% c("NA", NA)))$N_Total_FF) #43697
+sum(subset(Pass_BAS_dat_processedAH, !(N_Total %in% c("NA", NA)))$N_Total) #66675
+
+# - Final counts for modelling
+nrow(Pass_BAS_dat_processedAH.mod) #66578
+sum(subset(Pass_BAS_dat_processedAH.mod, !(N_Total_FF %in% c("NA", NA)))$N_Total_FF) #43655 (corrected to 43655)
+sum(subset(Pass_BAS_dat_processedAH.mod, !(N_Total %in% c("NA", NA)))$N_Total) #66617
+
+#write.csv(Pass_BAS_dat_processedAH.mod, '~/CEBRA_AirInterventions/Pass_BAS_dat_processedAH_danon.mod.csv', row.names = FALSE)
+
+
+
+
+#### S.2. BRM FF Host interception compositions ####
 
 #Data manually anonymised from "passengers-compliance-report_anonymised.csv"
 Pass_BAS_comdat <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_commdat_danon.csv', strip.white = TRUE)
@@ -173,7 +216,7 @@ Fig_Supps1B
 
 
 
-#### S.2. Time factor sensitivity checks (additional analyses not for inclusion) ####
+#### S.3. Time factor sensitivity checks (additional analyses not for inclusion) ####
 
 #Preparing time variable
 Pass_BAS_dat_processed.mod$ArrivalTime <- ymd_hms(Pass_BAS_dat_processed.mod$ArrivalTime)
