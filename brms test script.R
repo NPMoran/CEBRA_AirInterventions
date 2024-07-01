@@ -6,7 +6,7 @@ library(devtools)
 
 #install.packages('installr')
 library(installr)
-install.Rtools(check = TRUE, check_r_update = TRUE, GUI = TRUE)
+#install.Rtools(check = TRUE, check_r_update = TRUE, GUI = TRUE)
 find_rtools()
 
 #install.packages("rstan", repos = "https://cloud.r-project.org/", dependencies = TRUE)
