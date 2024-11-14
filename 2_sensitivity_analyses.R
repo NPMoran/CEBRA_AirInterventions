@@ -1,6 +1,6 @@
 # Study: Border biosecurity interceptions for air passengers – assessing intervention methods and analytic tools
 #
-# Code authored by: Nicholas Moran, CEBRA, University of Melbourne
+# Code authored by: [redacted]
 #
 # Date: May 2024
 

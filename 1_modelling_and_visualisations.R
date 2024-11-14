@@ -1,6 +1,6 @@
 # Study: Border biosecurity interceptions for air passengers – assessing intervention methods and analytic tools
 #
-# Code authored by: Nicholas Moran, CEBRA, University of Melbourne
+# Code authored by: [redacted]
 #
 # Date: May 2024
 
@@ -990,10 +990,26 @@ rownames(mod_performance_glm) <- c("Pass_BAS_full_DD_total_glm","Pass_BAS_full_D
 #r2_nakagawa(Pass_BAS_full_DD_total_FF_glm)
 #r2_nakagawa(Pass_BAS_full_Declarin_FF_glm)
 #r2_nakagawa(Pass_BAS_full_Detectin_FF_glm)
-deviance(Pass_BAS_full_DD_total_glm)
+
+#calculating CIs for variance components
+varcis_DD_total_glm <- confint(Pass_BAS_full_DD_total_glm)
 
 
+#Estimating proportional variation associated with random effect.
+#a - Proportional variance associated with random effects (R2cond - R2marg)
+#0.570456927 - 0.543097431 = 0.0273595
 
+#b - Proportion of random effect variance associated with origin (Var(origin)/Var(origin+routes))
+#0.004200524 / (0.004200524 + 0.042823712) = 0.08932679
+
+#c - Proportion of random effect variance associated with routes (Var(routes)/Var(flights+routes))
+#0.042823712 / (0.004200524 + 0.042823712) = 0.9106732
+
+#Proportion of total variance associated with origin (a*b)
+#0.0273595 * 0.08932679 = 0.002443936
+
+#Proportion of random effect variance associated with routes (Var(routes)/Var(flights+routes))
+#0.9106732 * 0.0273595 = 0.02491556
 
 
 #### 3B. Tables: Model summary ####
