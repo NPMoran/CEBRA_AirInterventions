@@ -208,11 +208,11 @@ Fig_Air_Loca_A <- ggplot(Loca_emsA, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, linewidth = 1)) +
   geom_segment(aes(color = Variable), x = Loca_emsA$N_lci, y = Loca_emsA$Position, xend = Loca_emsA$N_uci, yend = Loca_emsA$Position, size = 0.7) + 
-  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  geom_point(aes(color = Variable, shape = Variable), size = 2) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", linewidth = 0.5) +
   geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", linewidth = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.35, size = 2.5) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated BRM interceptions per flight",
        y = "") 
@@ -275,11 +275,11 @@ Fig_Air_Loca_B <- ggplot(Loca_emsB, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, linewidth = 1)) +
   geom_segment(aes(color = Variable), x = Loca_emsB$N_lci, y = Loca_emsB$Position, xend = Loca_emsB$N_uci, yend = Loca_emsB$Position, size = 0.7) + 
-  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  geom_point(aes(color = Variable, shape = Variable), size = 2) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", linewidth = 0.5) +
   geom_hline(yintercept = c(7, 14), linetype = 2, colour = "black", linewidth = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.77, vjust=0.35, size = 2.5) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated FF host interceptions per flight",
        y = "") 
@@ -298,96 +298,96 @@ Means_Regime <-setDT(Pass_BAS_dat_processed)[ , list(mean_regime = mean(N_Total)
 Means_Regime
 
 ##Plot: FF Interceptions by Location X Regime
-Pass_BAS_dat_processed_1 <- subset(Pass_BAS_dat_processed, Location == "Airport_A")
-Pass_BAS_dat_processed_2 <- subset(Pass_BAS_dat_processed, Location == "Airport_B")
-Pass_BAS_dat_processed_3 <- subset(Pass_BAS_dat_processed, Location == "Airport_C")
-Pass_BAS_dat_processed_4 <- subset(Pass_BAS_dat_processed, Location == "Airport_D")
-Pass_BAS_dat_processed_5 <- subset(Pass_BAS_dat_processed, Location == "Airport_E")
-Pass_BAS_dat_processed_6 <- subset(Pass_BAS_dat_processed, Location == "Airport_F")
-
-LocReg <- setDT(Pass_BAS_dat_processed)[ , list(N_Total_mean = mean(N_Total), 
-                                                N_Declarations_mean = mean(N_Declarations),
-                                                N_Detections_mean = mean(N_Detections)), 
-                                         by = .(Regime)]
-LocReg$Location <- "All"
-
-LocReg_1 <- setDT(Pass_BAS_dat_processed_1)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_1$Location <- "Airport_A"
-
-LocReg_2 <- setDT(Pass_BAS_dat_processed_2)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_2$Location <- "Airport_B"
-
-LocReg_3 <- setDT(Pass_BAS_dat_processed_3)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_3$Location <- "Airport_C"
-
-LocReg_4 <- setDT(Pass_BAS_dat_processed_4)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_4$Location <- "Airport_D"
-
-LocReg_5 <- setDT(Pass_BAS_dat_processed_5)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_5$Location <- "Airport_E"
-
-LocReg_6 <- setDT(Pass_BAS_dat_processed_6)[ , list(N_Total_mean = mean(N_Total), 
-                                                    N_Declarations_mean = mean(N_Declarations),
-                                                    N_Detections_mean = mean(N_Detections)), 
-                                             by = .(Regime)]
-LocReg_6$Location <- "Airport_F"
-
-
-LocReg_all <- rbind(LocReg,LocReg_1,LocReg_2,LocReg_3,LocReg_4,LocReg_5,LocReg_6)
-
-LocReg_all$Regime <- case_when(
-  LocReg_all$Regime %in% c("BI") ~ "one BI",
-  LocReg_all$Regime %in% c("BI x 2") ~ "two BIs",
-  LocReg_all$Regime %in% c("DDT") ~ "one DDT",
-  LocReg_all$Regime %in% c("DDT + BI") ~ "one DDT & BI",
-  LocReg_all$Regime %in% c("DDT x2") ~ "two DDTs",
-  .default = LocReg_all$Regime
-)
-
-LocReg_all$Regime <- ordered(LocReg_all$Regime, levels = c("one BI", "two BIs", "one DDT", "one DDT & BI", "two DDTs"))
-LocReg_all$Location <- ordered(LocReg_all$Location, levels = c("All","Airport_A","Airport_B","Airport_C", "Airport_D", "Airport_E", "Airport_F"))
-
-Fig_Air_Regi_Obvs <- ggplot(LocReg_all, aes(x = N_Detections_mean, y = N_Declarations_mean)) +
-  scale_y_continuous(limits = c(0, 1.2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0)) +
-  scale_x_continuous(limits = c(0, 2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
-  theme(legend.position = 'right',
-        legend.title = element_blank(),
-        legend.text = element_text(size = 8, colour = "black"), 
-        axis.text.x = element_text(size = 8, colour = "black"), 
-        axis.text.y = element_text(size = 8, colour = "black"), 
-        axis.title.x  = element_text(size=10, vjust = 0.1),
-        axis.title.y  = element_text(size=10, vjust = 0.1),
-        panel.border = element_rect(colour = "black", fill=NA, size = 1),
-        panel.background = element_rect(fill = "white")) +
-  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.7) +
-  geom_hline(yintercept = 0, linetype = 2, colour = "black", size = 0.7) +
-  geom_segment(color = 'grey', x =0, y = 0.5, xend = 0.5, yend = 0, size = 0.45, linetype=5) + 
-  geom_segment(color = 'grey', x =0, y = 1.0, xend = 1.0, yend = 0, size = 0.45, linetype=5) + 
-  geom_segment(color = 'grey', x =0, y = 1.5, xend = 1.5, yend = 0, size = 0.45, linetype=5) + 
-  geom_segment(color = 'grey', x =0, y = 2.0, xend = 2.0, yend = 0, size = 0.45, linetype=5) + 
-  geom_segment(color = 'grey', x =0, y = 2.5, xend = 2.5, yend = 0, size = 0.45, linetype=5) + 
-  geom_segment(color = 'grey', x =0, y = 3.0, xend = 3.0, yend = 0, size = 0.45, linetype=5) + 
-  geom_point(aes(shape = Regime, color = Location), size = 5.5, alpha = 0.85) +
-  scale_color_brewer(palette = "Set1") +
-  labs(x = "Average BRM detections per flight",
-       y = "Average BRM declarations per flight") 
-Fig_Air_Regi_Obvs
-
+#Pass_BAS_dat_processed_1 <- subset(Pass_BAS_dat_processed, Location == "Airport_A")
+#Pass_BAS_dat_processed_2 <- subset(Pass_BAS_dat_processed, Location == "Airport_B")
+#Pass_BAS_dat_processed_3 <- subset(Pass_BAS_dat_processed, Location == "Airport_C")
+#Pass_BAS_dat_processed_4 <- subset(Pass_BAS_dat_processed, Location == "Airport_D")
+#Pass_BAS_dat_processed_5 <- subset(Pass_BAS_dat_processed, Location == "Airport_E")
+#Pass_BAS_dat_processed_6 <- subset(Pass_BAS_dat_processed, Location == "Airport_F")
+#
+#LocReg <- setDT(Pass_BAS_dat_processed)[ , list(N_Total_mean = mean(N_Total), 
+#                                                N_Declarations_mean = mean(N_Declarations),
+#                                                N_Detections_mean = mean(N_Detections)), 
+#                                         by = .(Regime)]
+#LocReg$Location <- "All"
+#
+#LocReg_1 <- setDT(Pass_BAS_dat_processed_1)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_1$Location <- "Airport_A"
+#
+#LocReg_2 <- setDT(Pass_BAS_dat_processed_2)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_2$Location <- "Airport_B"
+#
+#LocReg_3 <- setDT(Pass_BAS_dat_processed_3)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_3$Location <- "Airport_C"
+#
+#LocReg_4 <- setDT(Pass_BAS_dat_processed_4)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_4$Location <- "Airport_D"
+#
+#LocReg_5 <- setDT(Pass_BAS_dat_processed_5)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_5$Location <- "Airport_E"
+#
+#LocReg_6 <- setDT(Pass_BAS_dat_processed_6)[ , list(N_Total_mean = mean(N_Total), 
+#                                                    N_Declarations_mean = mean(N_Declarations),
+#                                                    N_Detections_mean = mean(N_Detections)), 
+#                                             by = .(Regime)]
+#LocReg_6$Location <- "Airport_F"
+#
+#
+#LocReg_all <- rbind(LocReg,LocReg_1,LocReg_2,LocReg_3,LocReg_4,LocReg_5,LocReg_6)
+#
+#LocReg_all$Regime <- case_when(
+#  LocReg_all$Regime %in% c("BI") ~ "one BI",
+#  LocReg_all$Regime %in% c("BI x 2") ~ "two BIs",
+#  LocReg_all$Regime %in% c("DDT") ~ "one DDT",
+#  LocReg_all$Regime %in% c("DDT + BI") ~ "one DDT & BI",
+#  LocReg_all$Regime %in% c("DDT x2") ~ "two DDTs",
+#  .default = LocReg_all$Regime
+#)
+#
+#LocReg_all$Regime <- ordered(LocReg_all$Regime, levels = c("one BI", "two BIs", "one DDT", "one DDT & BI", "two DDTs"))
+#LocReg_all$Location <- ordered(LocReg_all$Location, levels = c("All","Airport_A","Airport_B","Airport_C", "Airport_D", "Airport_E", "Airport_F"))
+#
+#Fig_Air_Regi_Obvs <- ggplot(LocReg_all, aes(x = N_Detections_mean, y = N_Declarations_mean)) +
+#  scale_y_continuous(limits = c(0, 1.2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0)) +
+#  scale_x_continuous(limits = c(0, 2), expand = c(0.05,0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+#  theme(legend.position = 'right',
+#        legend.title = element_blank(),
+#        legend.text = element_text(size = 8, colour = "black"), 
+#        axis.text.x = element_text(size = 8, colour = "black"), 
+#        axis.text.y = element_text(size = 8, colour = "black"), 
+#        axis.title.x  = element_text(size=10, vjust = 0.1),
+#        axis.title.y  = element_text(size=10, vjust = 0.1),
+#        panel.border = element_rect(colour = "black", fill=NA, size = 1),
+#        panel.background = element_rect(fill = "white")) +
+#  geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.7) +
+#  geom_hline(yintercept = 0, linetype = 2, colour = "black", size = 0.7) +
+#  geom_segment(color = 'grey', x =0, y = 0.5, xend = 0.5, yend = 0, size = 0.45, linetype=5) + 
+#  geom_segment(color = 'grey', x =0, y = 1.0, xend = 1.0, yend = 0, size = 0.45, linetype=5) + 
+#  geom_segment(color = 'grey', x =0, y = 1.5, xend = 1.5, yend = 0, size = 0.45, linetype=5) + 
+#  geom_segment(color = 'grey', x =0, y = 2.0, xend = 2.0, yend = 0, size = 0.45, linetype=5) + 
+#  geom_segment(color = 'grey', x =0, y = 2.5, xend = 2.5, yend = 0, size = 0.45, linetype=5) + 
+#  geom_segment(color = 'grey', x =0, y = 3.0, xend = 3.0, yend = 0, size = 0.45, linetype=5) + 
+#  geom_point(aes(shape = Regime, color = Location), size = 5.5, alpha = 0.85) +
+#  scale_color_brewer(palette = "Set1") +
+#  labs(x = "Average BRM detections per flight",
+#       y = "Average BRM declarations per flight") 
+#Fig_Air_Regi_Obvs
+#
 #ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Air_Regi_Obvs.png", width = 18, height = 9, units = "cm", Fig_Air_Regi_Obvs, dpi = 600)
 
 
@@ -429,8 +429,9 @@ Regi_emsA$text <- paste(Regi_emsA$text, round(exp(Regi_emsA$asymp.UCL), digits =
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 #Regi_emsA$text
 
+
 Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.6, 1.5), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
   scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
   theme(legend.position = c(0.875,0.175),
         legend.title = element_blank(),
@@ -444,11 +445,11 @@ Fig_Air_Regi_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Variable), x = Regi_emsA$N_lci, y = Regi_emsA$Position, xend = Regi_emsA$N_uci, yend = Regi_emsA$Position, size = 0.7) + 
-  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  geom_point(aes(color = Variable, shape = Variable), size = 2) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.35, size = 2.55) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated BRM interceptions per flight",
        y = "") 
@@ -497,8 +498,9 @@ Regi_emsB$text <- paste(Regi_emsB$text, round(exp(Regi_emsB$asymp.UCL), digits =
 Regi_emsB$text <- paste(Regi_emsB$text, '', sep = ']')
 #Regi_emsB$text
 
+
 Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.6, 1.7), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
+  scale_x_continuous(limits = c(-0.6, 1.5), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5)) +
   scale_y_continuous(limits = c(0, 18), expand = c(0, 0), breaks=NULL) +
   theme(legend.position = c(0.875,0.175),
         legend.title = element_blank(),
@@ -512,11 +514,11 @@ Fig_Air_Regi_B <- ggplot(Regi_emsB, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Variable), x = Regi_emsB$N_lci, y = Regi_emsB$Position, xend = Regi_emsB$N_uci, yend = Regi_emsB$Position, size = 0.7) + 
-  geom_point(aes(color = Variable), shape = 19, size = 2) +
+  geom_point(aes(color = Variable, shape = Variable), size = 2) +
   scale_color_brewer(palette = "Dark2") +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   geom_hline(yintercept = c(6, 12), linetype = 2, colour = "black", size = 0.2) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.57, vjust=0.35, size = 2.55) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated FF host interceptions per flight",
        y = "") 
@@ -598,7 +600,7 @@ knitr::kable(Eff_Pas, "simple", align = "lc", row.names = FALSE)
 Pass_BAS_full_DD_total_glm.FO <- subset(Pass_BAS_full_DD_total_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_DD_total_glm.FO$lci <- Pass_BAS_full_DD_total_glm.FO$condval - 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
 Pass_BAS_full_DD_total_glm.FO$uci <- Pass_BAS_full_DD_total_glm.FO$condval + 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
-Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[order(Pass_BAS_full_DD_total_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[order(Pass_BAS_full_DD_total_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_DD_total_glm.FO$Position <- c(7:1)
 
 Fig_Air_Orig_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FO, aes(x = condval, y = Position)) +
@@ -615,7 +617,7 @@ Fig_Air_Orig_A1 <- ggplot(Pass_BAS_full_DD_total_glm.FO, aes(x = condval, y = Po
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_glm.FO$lci, y = Pass_BAS_full_DD_total_glm.FO$Position, xend = Pass_BAS_full_DD_total_glm.FO$uci, yend = Pass_BAS_full_DD_total_glm.FO$Position, size = 0.4) + 
   geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total)", parse = TRUE)
@@ -627,7 +629,7 @@ Fig_Air_Orig_A1
 Pass_BAS_full_Declarin_glm.FO <- subset(Pass_BAS_full_Declarin_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_Declarin_glm.FO$lci <- Pass_BAS_full_Declarin_glm.FO$condval - 1.96*(Pass_BAS_full_Declarin_glm.FO$condsd)
 Pass_BAS_full_Declarin_glm.FO$uci <- Pass_BAS_full_Declarin_glm.FO$condval + 1.96*(Pass_BAS_full_Declarin_glm.FO$condsd)
-Pass_BAS_full_Declarin_glm.FO <- Pass_BAS_full_Declarin_glm.FO[order(Pass_BAS_full_Declarin_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_Declarin_glm.FO <- Pass_BAS_full_Declarin_glm.FO[order(Pass_BAS_full_Declarin_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_Declarin_glm.FO$Position <- c(7:1)
 
 Fig_Air_Orig_A2 <- ggplot(Pass_BAS_full_Declarin_glm.FO, aes(x = condval, y = Position)) +
@@ -643,8 +645,8 @@ Fig_Air_Orig_A2 <- ggplot(Pass_BAS_full_Declarin_glm.FO, aes(x = condval, y = Po
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_glm.FO$lci, y = Pass_BAS_full_Declarin_glm.FO$Position, xend = Pass_BAS_full_Declarin_glm.FO$uci, yend = Pass_BAS_full_Declarin_glm.FO$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.3) +
+  geom_point(colour = 'black', shape = 17, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.3, y = 0.6, size = 2.4, label = "italic(N_Declarations)", parse = TRUE)
@@ -657,7 +659,7 @@ Fig_Air_Orig_A2
 Pass_BAS_full_Detectin_glm.FO <- subset(Pass_BAS_full_Detectin_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_Detectin_glm.FO$lci <- Pass_BAS_full_Detectin_glm.FO$condval - 1.96*(Pass_BAS_full_Detectin_glm.FO$condsd)
 Pass_BAS_full_Detectin_glm.FO$uci <- Pass_BAS_full_Detectin_glm.FO$condval + 1.96*(Pass_BAS_full_Detectin_glm.FO$condsd)
-Pass_BAS_full_Detectin_glm.FO <- Pass_BAS_full_Detectin_glm.FO[order(Pass_BAS_full_Detectin_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_Detectin_glm.FO <- Pass_BAS_full_Detectin_glm.FO[order(Pass_BAS_full_Detectin_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_Detectin_glm.FO$Position <- c(7:1)
 
 Fig_Air_Orig_A3 <- ggplot(Pass_BAS_full_Detectin_glm.FO, aes(x = condval, y = Position)) +
@@ -673,8 +675,8 @@ Fig_Air_Orig_A3 <- ggplot(Pass_BAS_full_Detectin_glm.FO, aes(x = condval, y = Po
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_glm.FO$lci, y = Pass_BAS_full_Detectin_glm.FO$Position, xend = Pass_BAS_full_Detectin_glm.FO$uci, yend = Pass_BAS_full_Detectin_glm.FO$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  geom_point(colour = 'black', shape = 15, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Detections)", parse = TRUE)
@@ -689,7 +691,7 @@ Fig_Air_Orig_A3
 Pass_BAS_full_DD_total_FF_glm.FO <- subset(Pass_BAS_full_DD_total_FF_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_DD_total_FF_glm.FO$lci <- Pass_BAS_full_DD_total_FF_glm.FO$condval - 1.96*(Pass_BAS_full_DD_total_FF_glm.FO$condsd)
 Pass_BAS_full_DD_total_FF_glm.FO$uci <- Pass_BAS_full_DD_total_FF_glm.FO$condval + 1.96*(Pass_BAS_full_DD_total_FF_glm.FO$condsd)
-Pass_BAS_full_DD_total_FF_glm.FO <- Pass_BAS_full_DD_total_FF_glm.FO[order(Pass_BAS_full_DD_total_FF_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_DD_total_FF_glm.FO <- Pass_BAS_full_DD_total_FF_glm.FO[order(Pass_BAS_full_DD_total_FF_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_DD_total_FF_glm.FO$Position <- c(7:1)
 
 Fig_Bir_Orig_B1 <- ggplot(Pass_BAS_full_DD_total_FF_glm.FO, aes(x = condval, y = Position)) +
@@ -706,7 +708,7 @@ Fig_Bir_Orig_B1 <- ggplot(Pass_BAS_full_DD_total_FF_glm.FO, aes(x = condval, y =
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#1B9E77', x = Pass_BAS_full_DD_total_FF_glm.FO$lci, y = Pass_BAS_full_DD_total_FF_glm.FO$Position, xend = Pass_BAS_full_DD_total_FF_glm.FO$uci, yend = Pass_BAS_full_DD_total_FF_glm.FO$Position, size = 0.4) + 
   geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.3) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.29, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.15, y = 0.6, size = 2.4, label = "italic(N_Total_FF)", parse = TRUE)
@@ -718,7 +720,7 @@ Fig_Bir_Orig_B1
 Pass_BAS_full_Declarin_FF_glm.FO <- subset(Pass_BAS_full_Declarin_FF_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_Declarin_FF_glm.FO$lci <- Pass_BAS_full_Declarin_FF_glm.FO$condval - 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
 Pass_BAS_full_Declarin_FF_glm.FO$uci <- Pass_BAS_full_Declarin_FF_glm.FO$condval + 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
-Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[order(Pass_BAS_full_Declarin_FF_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[order(Pass_BAS_full_Declarin_FF_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_Declarin_FF_glm.FO$Position <- c(7:1)
 
 Fig_Bir_Orig_B2 <- ggplot(Pass_BAS_full_Declarin_FF_glm.FO, aes(x = condval, y = Position)) +
@@ -734,8 +736,8 @@ Fig_Bir_Orig_B2 <- ggplot(Pass_BAS_full_Declarin_FF_glm.FO, aes(x = condval, y =
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_FF_glm.FO$lci, y = Pass_BAS_full_Declarin_FF_glm.FO$Position, xend = Pass_BAS_full_Declarin_FF_glm.FO$uci, yend = Pass_BAS_full_Declarin_FF_glm.FO$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.3) +
+  geom_point(colour = 'black', shape = 17, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.58, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.3, y = 0.6, size = 2.4, label = "italic(N_Declarations_FF)", parse = TRUE)
@@ -748,7 +750,7 @@ Fig_Bir_Orig_B2
 Pass_BAS_full_Detectin_FF_glm.FO <- subset(Pass_BAS_full_Detectin_FF_glm.ranef, grpvar == "FlightOrigin")
 Pass_BAS_full_Detectin_FF_glm.FO$lci <- Pass_BAS_full_Detectin_FF_glm.FO$condval - 1.96*(Pass_BAS_full_Detectin_FF_glm.FO$condsd)
 Pass_BAS_full_Detectin_FF_glm.FO$uci <- Pass_BAS_full_Detectin_FF_glm.FO$condval + 1.96*(Pass_BAS_full_Detectin_FF_glm.FO$condsd)
-Pass_BAS_full_Detectin_FF_glm.FO <- Pass_BAS_full_Detectin_FF_glm.FO[order(Pass_BAS_full_Detectin_FF_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_Detectin_FF_glm.FO <- Pass_BAS_full_Detectin_FF_glm.FO[order(Pass_BAS_full_Detectin_FF_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_Detectin_FF_glm.FO$Position <- c(7:1)
 
 Fig_Bir_Orig_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FO, aes(x = condval, y = Position)) +
@@ -764,8 +766,8 @@ Fig_Bir_Orig_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FO, aes(x = condval, y =
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_FF_glm.FO$lci, y = Pass_BAS_full_Detectin_FF_glm.FO$Position, xend = Pass_BAS_full_Detectin_FF_glm.FO$uci, yend = Pass_BAS_full_Detectin_FF_glm.FO$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.385, vjust=-0.4, size = 2.3) +
+  geom_point(colour = 'black', shape = 15, size = 1) +
+  geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-0.385, vjust=-0.4, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
   annotate("text", x = 0.2, y = 0.6, size = 2.4, label = "italic(N_Detections_FF)", parse = TRUE)
@@ -827,7 +829,7 @@ Fig_Air_Numb_A2 <- ggplot(Pass_BAS_full_Declarin_glm.FN, aes(x = condval, y = Po
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_glm.FN$lci, y = Pass_BAS_full_Declarin_glm.FN$Position, xend = Pass_BAS_full_Declarin_glm.FN$uci, yend = Pass_BAS_full_Declarin_glm.FN$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_point(colour = 'black', shape = 17, size = 1) +
   geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.95, vjust=0.5, size = 1.2) +
   labs(x = "Intercept estimates by flight number",
        y = "") +
@@ -858,7 +860,7 @@ Fig_Air_Numb_A3 <- ggplot(Pass_BAS_full_Detectin_glm.FN, aes(x = condval, y = Po
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_glm.FN$lci, y = Pass_BAS_full_Detectin_glm.FN$Position, xend = Pass_BAS_full_Detectin_glm.FN$uci, yend = Pass_BAS_full_Detectin_glm.FN$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_point(colour = 'black', shape = 15, size = 1) +
   geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.16, vjust=0.5, size = 1.2) +
   labs(x = "Intercept estimates by flight number",
        y = "") +
@@ -920,7 +922,7 @@ Fig_Air_Numb_B2 <- ggplot(Pass_BAS_full_Declarin_FF_glm.FN, aes(x = condval, y =
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#D95F02', x = Pass_BAS_full_Declarin_FF_glm.FN$lci, y = Pass_BAS_full_Declarin_FF_glm.FN$Position, xend = Pass_BAS_full_Declarin_FF_glm.FN$uci, yend = Pass_BAS_full_Declarin_FF_glm.FN$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_point(colour = 'black', shape = 17, size = 1) +
   geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-2.04, vjust=0.5, size = 1.2) +
   labs(x = "Intercept estimates by flight number",
        y = "") +
@@ -951,7 +953,7 @@ Fig_Air_Numb_B3 <- ggplot(Pass_BAS_full_Detectin_FF_glm.FN, aes(x = condval, y =
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(colour = '#7570B3', x = Pass_BAS_full_Detectin_FF_glm.FN$lci, y = Pass_BAS_full_Detectin_FF_glm.FN$Position, xend = Pass_BAS_full_Detectin_FF_glm.FN$uci, yend = Pass_BAS_full_Detectin_FF_glm.FN$Position, size = 0.4) + 
-  geom_point(colour = 'black', shape = 19, size = 1) +
+  geom_point(colour = 'black', shape = 15, size = 1) +
   geom_text(aes(label=grp, fontface = 1), hjust = "left", x =-1.31, vjust=0.5, size = 1.2) +
   labs(x = "Intercept estimates by flight number",
        y = "") +
@@ -1219,7 +1221,7 @@ table2h$P <- ""
 table2h$Var <- ""
 
 table2i <- NULL
-table2i$Model_param <- "Model: N_Detections_FF"
+table2i$Model_fparam <- "Model: N_Detections_FF"
 table2i <- as.data.frame(table2i)
 table2i$Estimate <- ""
 table2i$`S.E.` <- ""

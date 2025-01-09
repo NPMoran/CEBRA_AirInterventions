@@ -312,7 +312,7 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.7, 2.1), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+  scale_x_continuous(limits = c(-0.7, 2.0), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
   scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
   theme(legend.position = c(0.825,0.175),
         legend.title = element_blank(),
@@ -326,16 +326,17 @@ Fig_Sens_A <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Model), x = Regi_emsA$N_lci, y = Regi_emsA$Position, xend = Regi_emsA$N_uci, yend = Regi_emsA$Position, size = 0.7) + 
-  geom_point(aes(color = Model), shape = 19, size = 2) +
+  geom_point(aes(color = Model, shape = Model), size = 2, stroke = 1, fill = "grey") +
+  scale_shape_manual(values=c(21,24,22,23,25)) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.35, size = 2.5) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total BRM interceptions/flight by regime",
        y = "") 
 Fig_Sens_A
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 18, height = 11.5, units = "cm", Fig_Sens_A, dpi = 600)
+#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_A.png", width = 18, height = 12, units = "cm", Fig_Sens_A, dpi = 600)
 
 
 
@@ -388,7 +389,7 @@ Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO <- as.data.frame(ranef(Pass_BAS_full_
 
 Pass_BAS_full_DD_total_glm.FO$lci <- Pass_BAS_full_DD_total_glm.FO$condval - 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
 Pass_BAS_full_DD_total_glm.FO$uci <- Pass_BAS_full_DD_total_glm.FO$condval + 1.96*(Pass_BAS_full_DD_total_glm.FO$condsd)
-Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[order(Pass_BAS_full_DD_total_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[order(Pass_BAS_full_DD_total_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_DD_total_glm.FO$Position <- c(7:1)
 
 #reordering dataframes to match
@@ -403,10 +404,10 @@ Pass_BAS_full_DD_total_brm.ranef_zif_FO <- Pass_BAS_full_DD_total_brm.ranef_zif_
 Pass_BAS_full_DD_total_brm.ranef_ngb_FO <- Pass_BAS_full_DD_total_brm.ranef_ngb_FO[match(target, Pass_BAS_full_DD_total_brm.ranef_ngb_FO$Group),]
 Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO <- Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO[match(target, Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Group),]
 
-Pass_BAS_full_DD_total_brm.ranef_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.1
-Pass_BAS_full_DD_total_brm.ranef_zif_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.2
-Pass_BAS_full_DD_total_brm.ranef_ngb_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.3
-Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.4
+Pass_BAS_full_DD_total_brm.ranef_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.12
+Pass_BAS_full_DD_total_brm.ranef_zif_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.24
+Pass_BAS_full_DD_total_brm.ranef_ngb_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.36
+Pass_BAS_full_DD_total_brm.ranef_ngbzif_FO$Position <- Pass_BAS_full_DD_total_glm.FO$Position - 0.48
 
 Pass_BAS_full_DD_total_glm.FO <- Pass_BAS_full_DD_total_glm.FO[,c(4,5,7,8,9)]
 Pass_BAS_full_DD_total_brm.ranef_FO <- Pass_BAS_full_DD_total_brm.ranef_FO[,c(5,1,3,4,6)]
@@ -439,7 +440,7 @@ Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson (lme4)", "Po
 
 Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_x_continuous(limits = c(-0.5, 0.5), expand = c(0, 0), breaks=c(-0.3, 0.0, 0.3)) +
-  scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
+  scale_y_continuous(limits = c(0.1, 7.25), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   theme(legend.position = "none",
 #        legend.title = element_blank(),
@@ -455,11 +456,12 @@ Fig_Sens_B <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Model), x = Orig_Sens_A$LCI, y = Orig_Sens_A$Position, xend = Orig_Sens_A$UCI, yend = Orig_Sens_A$Position, size = 0.4) + 
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.485, vjust=0, size = 2.5) +
+  geom_point(aes(shape = Model), colour = 'black', size = 1, stroke = 0.4, fill = "grey") +
+  scale_shape_manual(values=c(21,24,22,23,25)) +
+  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.485, vjust=0.8, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
-  annotate("text", x = 0.375, y = 0.4, size = 2.75, label = "italic(N_Total)", parse = TRUE)
+  annotate("text", x = 0.375, y = 0.3, size = 2.75, label = "italic(N_Total)", parse = TRUE)
 Fig_Sens_B
 
 ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_B.png", width = 8, height = 9, units = "cm", Fig_Sens_B, dpi = 600)
@@ -530,7 +532,7 @@ Regi_emsA$text <- paste(Regi_emsA$text, format(round(exp(Regi_emsA$UCI), digits 
 Regi_emsA$text <- paste(Regi_emsA$text, '', sep = ']')
 
 Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
-  scale_x_continuous(limits = c(-0.7, 2.1), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
+  scale_x_continuous(limits = c(-0.7, 2), expand = c(0, 0), breaks=c(0.0, 0.5, 1.0, 1.5, 2.0)) +
   scale_y_continuous(limits = c(0.1, 28), expand = c(0, 0), breaks=NULL) +
   theme(legend.position = c(0.825,0.175),
         legend.title = element_blank(),
@@ -544,10 +546,11 @@ Fig_Sens_C <- ggplot(Regi_emsA, aes(x = N_mean, y = Position)) +
         axis.title.x  = element_text(size=9, vjust = 0.1),
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Model), x = Regi_emsA$N_lci, y = Regi_emsA$Position, xend = Regi_emsA$N_uci, yend = Regi_emsA$Position, size = 0.7) + 
-  geom_point(aes(color = Model), shape = 19, size = 2) +
+  geom_point(aes(color = Model, shape = Model), size = 2, stroke = 1, fill = "grey") +
+  scale_shape_manual(values=c(21,24,22,23,25)) +
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
-  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.25, size = 2.3) +
+  geom_text(aes(label=text, fontface = 1), hjust = "left", x =-0.67, vjust=0.25, size = 2.5) +
   #geom_text(aes(label=BeforeAfter, fontface = 1), hjust = "left", x =-10.5, vjust=0.5, size = 1.8) +
   labs(x = "Estimated total FF host declarations/flight by regime",
        y = "") 
@@ -607,7 +610,7 @@ Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO <- as.data.frame(ranef(Pass_BAS_fu
 
 Pass_BAS_full_Declarin_FF_glm.FO$lci <- Pass_BAS_full_Declarin_FF_glm.FO$condval - 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
 Pass_BAS_full_Declarin_FF_glm.FO$uci <- Pass_BAS_full_Declarin_FF_glm.FO$condval + 1.96*(Pass_BAS_full_Declarin_FF_glm.FO$condsd)
-Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[order(Pass_BAS_full_Declarin_FF_glm.FO$condval,decreasing=TRUE),]
+#Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[order(Pass_BAS_full_Declarin_FF_glm.FO$condval,decreasing=TRUE),]
 Pass_BAS_full_Declarin_FF_glm.FO$Position <- c(7:1)
 
 #reordering dataframes to match
@@ -622,10 +625,10 @@ Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO <- Pass_BAS_full_Declarin_FF_brm.rane
 Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO <- Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO[match(target, Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO$Group),]
 Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO <- Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO[match(target, Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Group),]
 
-Pass_BAS_full_Declarin_FF_brm.ranef_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.1
-Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.2
-Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.3
-Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.4
+Pass_BAS_full_Declarin_FF_brm.ranef_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.12
+Pass_BAS_full_Declarin_FF_brm.ranef_zif_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.24
+Pass_BAS_full_Declarin_FF_brm.ranef_ngb_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.36
+Pass_BAS_full_Declarin_FF_brm.ranef_ngbzif_FO$Position <- Pass_BAS_full_Declarin_FF_glm.FO$Position - 0.48
 
 Pass_BAS_full_Declarin_FF_glm.FO <- Pass_BAS_full_Declarin_FF_glm.FO[,c(4,5,7,8,9)]
 Pass_BAS_full_Declarin_FF_brm.ranef_FO <- Pass_BAS_full_Declarin_FF_brm.ranef_FO[,c(5,1,3,4,6)]
@@ -658,7 +661,7 @@ Orig_Sens_A$Model <- ordered(Orig_Sens_A$Model, levels = c("Poisson (lme4)", "Po
 
 Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
   scale_x_continuous(limits = c(-1, 1), expand = c(0, 0), breaks=c(-0.5, 0.0, 0.5)) +
-  scale_y_continuous(limits = c(0.2, 7.4), expand = c(0, 0), breaks=NULL) +
+  scale_y_continuous(limits = c(0.1, 7.25), expand = c(0, 0), breaks=NULL) +
   geom_vline(xintercept = 0, linetype = 2, colour = "black", size = 0.5) +
   theme(legend.position = "none",
         #        legend.title = element_blank(),
@@ -674,14 +677,15 @@ Fig_Sens_D <- ggplot(Orig_Sens_A, aes(x = Intercept, y = Position)) +
         panel.border = element_rect(colour = "black", fill=NA, size = 1)) +
   geom_segment(aes(color = Model), x = Orig_Sens_A$LCI, y = Orig_Sens_A$Position, xend = Orig_Sens_A$UCI, yend = Orig_Sens_A$Position, size = 0.4) + 
   scale_colour_manual(values = c("#1BAB70","#4C5083" , "#1F85B9", "#C1D174", "#AA9335")) +
-  geom_point(colour = 'black', shape = 19, size = 1) +
-  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.975, vjust=0, size = 2.5) +
+  geom_point(aes(shape = Model), colour = 'black', size = 1, stroke = 0.4, fill = "grey") +
+  scale_shape_manual(values=c(21,24,22,23,25)) +
+  geom_text(aes(label=Group, fontface = 1), hjust = "left", x =-0.975, vjust=0.8, size = 2.5) +
   labs(x = "Intercept estimates by flight origin",
        y = "") +
-  annotate("text", x = 0.575, y = 0.4, size = 2.75, label = "italic(N_Declarations_FF)", parse = TRUE)
+  annotate("text", x = 0.575, y = 0.3, size = 2.75, label = "italic(N_Declarations_FF)", parse = TRUE)
 Fig_Sens_D
 
-#ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 8, height = 9, units = "cm", Fig_Sens_D, dpi = 600)
+ggsave("~/CEBRA_AirInterventions/outputs_visualisations/Fig_Sens_D.png", width = 8, height = 9, units = "cm", Fig_Sens_D, dpi = 600)
 
 
 
