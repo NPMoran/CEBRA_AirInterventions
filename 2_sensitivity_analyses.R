@@ -1,6 +1,6 @@
 # Study: Border biosecurity interceptions for air passengers – assessing intervention methods and analytic tools
 #
-# Code authored by: [redacted]
+# Code authored by: Nicholas Moran
 #
 # Date: May 2024
 
