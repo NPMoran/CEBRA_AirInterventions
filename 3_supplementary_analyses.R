@@ -11,7 +11,7 @@ library(tidyverse); library(data.table); library(lubridate); library(xtable)
 library(lme4); library(lmerTest);  library(car); library(performance); library(emmeans)
 
 
-#### S.1. Preparing dataset for BN analyses ####
+#### S.1. Preparing dataset for BN analyses (not included in final MS) ####
 
 #Preparing data set - 
 Pass_BAS_dat_processedAH <- read.csv('~/CEBRA_AirInterventions/Pass_BAS_dat_processedAH_danon.csv')
